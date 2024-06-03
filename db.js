@@ -11,6 +11,8 @@ export const db = () =>
       process.exit(1);
     });
 
+export const closeDb = () => mongoose.connection.close();
+
 function getDbUrl() {
   switch (process.env.NODE_ENV) {
     case "test":
