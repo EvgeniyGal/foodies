@@ -4,6 +4,8 @@ const ingredient = new Schema(
   {
     name: {
       type: String,
+      desc: String,
+      img: String,
     },
   },
   {
