@@ -4,6 +4,7 @@ import cors from "cors";
 import path from "path";
 import dotenv from "dotenv";
 import categoriesRouter from "./routes/categoriesRouter.js";
+import areasRouter from "./routes/areasRouter.js";
 import { db } from "./db.js";
 
 dotenv.config({ path: path.resolve(".env.general") });
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/categories", categoriesRouter);
+app.use("/areas", areasRouter)
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
