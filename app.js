@@ -5,7 +5,6 @@ import path from "path";
 import dotenv from "dotenv";
 import categoriesRouter from "./routes/categoriesRouter.js";
 import { db } from "./db.js";
-import { get } from "http";
 
 dotenv.config({ path: path.resolve(".env.general") });
 
