@@ -29,6 +29,23 @@ const register = async (body) => {
   return await updateUserWithToken(user._id);
 };
 
+const login = async ({ email, password }) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw HttpError(401, 'Email or password is wrong');
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw HttpError(401, 'Email or password is wrong');
+  }
+
+  return await updateUserWithToken(user._id);
+};
+
 export default {
   register,
+  login
 };
