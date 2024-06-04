@@ -1,12 +1,15 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import 'dotenv/config';
+
+const { NODE_ENV, DEV_DB_URL, TEST_DB_URL, PROD_DB_URL } = process.env;
 
 export const db = () =>
   mongoose
     .connect(getDbUrl())
     .then(() => {
-      console.log("Database connection successful");
+      console.log('Database connection successful');
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       process.exit(1);
     });
@@ -14,14 +17,14 @@ export const db = () =>
 export const closeDb = () => mongoose.connection.close();
 
 function getDbUrl() {
-  switch (process.env.NODE_ENV) {
-    case "test":
-      return process.env.TEST_DB_URL;
-    case "dev":
-      return process.env.DEV_DB_URL;
-    case "prod":
-      return process.env.PROD_DB_URL;
+  switch (NODE_ENV) {
+    case 'test':
+      return TEST_DB_URL;
+    case 'dev':
+      return DEV_DB_URL;
+    case 'prod':
+      return PROD_DB_URL;
     default:
-      return process.env.DEV_DB_URL;
+      return DEV_DB_URL;
   }
 }
