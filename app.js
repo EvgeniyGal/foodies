@@ -1,11 +1,12 @@
-import express from 'express';
-import morgan from 'morgan';
-import cors from 'cors';
-import path from 'path';
-import dotenv from 'dotenv';
-import categoriesRouter from './routes/categoriesRouter.js';
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import path from "path";
+import dotenv from "dotenv";
+import categoriesRouter from "./routes/categoriesRouter.js";
 import ingredientsRouter from './routes/ingredientsRouter.js';
-import { db } from './db.js';
+import testimonialsRouter from "./routes/testimonialsRouter.js";
+import { db } from "./db.js";
 
 dotenv.config({ path: path.resolve('.env.general') });
 
@@ -19,6 +20,8 @@ app.use(express.static('public'));
 app.use('/categories', categoriesRouter);
 
 app.use('/ingredients', ingredientsRouter);
+
+app.use("/testimonials", testimonialsRouter)
 
 app.use((_, res) => {
   res.status(404).json({ message: 'Route not found' });
