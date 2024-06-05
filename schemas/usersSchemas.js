@@ -10,3 +10,8 @@ export const registerUserSchema = Joi.object({
   email,
   password,
 });
+
+export const loginUserSchema = Joi.object({
+  email,
+  password,
+});

@@ -18,6 +18,21 @@ const register = async (req, res) => {
 	});
 };
 
+const login = async (req, res) => {
+	const user = await usersServices.login(req.body);
+	const { name, email, avatar, token } = user;
+
+	res.status(200).json({
+		token,
+		user: {
+			name,
+			email,
+			avatar,
+		}
+	})
+};
+
 export default {
 	register: ctrlWrapper(register),
+	login: ctrlWrapper(login),
 }
