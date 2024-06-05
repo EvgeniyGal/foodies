@@ -9,7 +9,7 @@ recipesRouter.get('/', recipesController.getRecipesByFilter);
 
 recipesRouter.get('/:id', recipesController.getRecipeById);
 
-// recipesRouter.get('/popular', getPopularRecipes);
+recipesRouter.get('/popular/list', recipesController.getPopularRecipes);
 
 //private routes
 
@@ -17,10 +17,12 @@ recipesRouter.get('/personal/data', recipesController.getOwnRecipes);
 
 recipesRouter.post('/personal', recipesController.addRecipe);
 
+recipesRouter.get('/favorite/list', recipesController.getFavoriteRecipes);
+
 recipesRouter.delete('/:id', recipesController.deleteRecipe);
 
-// recipesRouter.patch('/:id/like', likeRecipe);
+recipesRouter.patch('/:id/like', recipesController.likeRecipe);
 
-// recipesRouter.get('/favorite', getFavoriteRecipes);
+recipesRouter.patch('/:id/unlike', recipesController.unlikeRecipe);
 
 export default recipesRouter;

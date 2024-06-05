@@ -18,16 +18,29 @@ const listRecipes = async (filter, fields, settings) => {
   if (owner) {
     validateFilter['owner'] = Types.ObjectId.createFromHexString(owner);
   }
-  return await Recipe.find(validateFilter, fields, settings);
+  const resp = await Recipe.find(validateFilter, fields, settings);
+  return resp ? resp : null;
 };
 
-const recipeById = async id => await Recipe.findById(id);
+const recipeById = async id => {
+  const resp = await Recipe.findById(id);
+  return resp ? resp : null;
+};
 
-const recipeByFilter = async filter => await Recipe.findOne(filter);
+const recipeByFilter = async filter => {
+  const resp = await Recipe.findOne(filter);
+  return resp ? resp : null;
+};
 
-const createNewRecipe = async recipe => await Recipe.create(recipe);
+const createNewRecipe = async recipe => {
+  const resp = await Recipe.create(recipe);
+  return resp ? resp : null;
+};
 
-const deleteRecipeById = async id => await Recipe.findByIdAndDelete(id);
+const deleteRecipeById = async id => {
+  const resp = await Recipe.findOneAndDelete(filter);
+  return resp ? resp : null;
+};
 
 export {
   listRecipes,
