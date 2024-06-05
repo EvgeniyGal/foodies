@@ -5,11 +5,13 @@ import validateBody from '../decorators/validateBody.js';
 import usersController from '../controllers/usersController.js';
 import authenticate from '../middleware/authenticate.js';
 import { uploadAvatar } from '../middleware/upload.js';
+import { isValidId } from '../middleware/isValidId.js';
 
 const usersRouter = express.Router();
 
 usersRouter.post('/register', validateBody(registerUserSchema), usersController.register);
 usersRouter.post('/login', validateBody(loginUserSchema), usersController.login);
 usersRouter.patch('/avatar', authenticate, uploadAvatar, usersController.updateAvatar);
+usersRouter.patch('/followings/:id', authenticate, isValidId, usersController.addToFollowing);
 
 export default usersRouter;

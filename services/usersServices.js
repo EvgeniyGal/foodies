@@ -47,14 +47,27 @@ const login = async ({ email, password }) => {
 
 const authenticate = async (token) => {
   const { id } = jwt.verify(token, SECRET_KEY);
-  return await User.findById(id);
+  return await findOne(id);
 };
 
+const findOne = async (id) => await User.findById(id, '-password');
+
 const update = async (id, body) => await User.findByIdAndUpdate(id, body);
+
+const addToFollowing = async (followerId, followingId) => {
+  const followingUser = await User.findByIdAndUpdate(followingId, { $addToSet: { followers: followerId } });
+  if (!followingUser) {
+    throw HttpError(400, 'No user found to add to following list');
+  }
+
+  return await User.findByIdAndUpdate(followerId, { $addToSet: { following: followingId } })
+};
+
 
 export default {
   register,
   login,
   authenticate,
-  update
+  update,
+  addToFollowing,
 };
