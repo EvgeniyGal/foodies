@@ -11,5 +11,7 @@ const usersRouter = express.Router();
 usersRouter.post('/register', validateBody(registerUserSchema), usersController.register);
 usersRouter.post('/login', validateBody(loginUserSchema), usersController.login);
 usersRouter.patch('/avatar', authenticate, uploadAvatar, usersController.updateAvatar);
+usersRouter.get('/current', authenticate, usersController.getCurrentUser);
+usersRouter.post('/logout', authenticate, usersController.logout);
 
 export default usersRouter;
