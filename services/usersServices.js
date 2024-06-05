@@ -63,6 +63,14 @@ const addToFollowing = async (followerId, followingId) => {
   return await User.findByIdAndUpdate(followerId, { $addToSet: { following: followingId } })
 };
 
+const removeFromFollowing = async (followerId, followingId) => {
+  const followingUser = await User.findByIdAndUpdate(followingId, { $pull: { followers: followerId } });
+  if (!followingUser) {
+    throw HttpError(400, 'No user found to romove from following list');
+  }
+
+  return await User.findByIdAndUpdate(followerId, { $pull: { following: followingId } })
+}
 
 export default {
   register,
@@ -70,4 +78,5 @@ export default {
   authenticate,
   update,
   addToFollowing,
+  removeFromFollowing,
 };

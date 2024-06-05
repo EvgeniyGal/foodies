@@ -53,12 +53,12 @@ const updateAvatar = async (req, res) => {
   res.status(200).json({
     avatar: avatarURL,
   })
-}
+};
 
 const resizeAvatar = async (avatarPath) => {
   const avatar = await Jimp.read(avatarPath);
   await avatar.resize(250, 250).writeAsync(avatarPath);
-}
+};
 
 const addToFollowing = async (req, res) => {
   const { _id: userId } = req.user;
@@ -69,12 +69,23 @@ const addToFollowing = async (req, res) => {
   res.status(200).json({
     following,
   })
+};
 
-}
+const removeFromFollowing = async (req, res) => {
+  const { _id: userId } = req.user;
+  const { id: followingId } = req.params;
+
+  const { following } = await usersServices.removeFromFollowing(userId, followingId);
+
+  res.status(200).json({
+    following,
+  })
+};
 
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   updateAvatar: ctrlWrapper(updateAvatar),
   addToFollowing: ctrlWrapper(addToFollowing),
+  removeFromFollowing: ctrlWrapper(removeFromFollowing),
 }
