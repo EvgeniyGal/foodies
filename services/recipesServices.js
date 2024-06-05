@@ -16,7 +16,7 @@ const listRecipes = async (filter, fields, settings) => {
     };
   }
   if (owner) {
-    validateFilter['owner'] = Types.ObjectId.createFromHexString(owner);
+    validateFilter['owner'] = owner;
   }
   const resp = await Recipe.find(validateFilter, fields, settings);
   return resp ? resp : null;

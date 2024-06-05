@@ -47,9 +47,8 @@ const deleteFavorite = async ({ recipe, user }) => {
 
   if (favoriteRecipe) {
     const updatedUsers = favoriteRecipe.users.filter(
-      id => id.toString() !== user
+      id => id.toString() !== user.toString()
     );
-
     const resp = await Favorite.findOneAndUpdate(
       filter,
       {
