@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export const db = () =>
   mongoose
     .connect(getDbUrl())
     .then(() => {
-      console.log("Database connection successful");
+      console.log('Database connection successful');
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       process.exit(1);
     });
@@ -15,11 +15,11 @@ export const closeDb = () => mongoose.connection.close();
 
 function getDbUrl() {
   switch (process.env.NODE_ENV) {
-    case "test":
+    case 'test':
       return process.env.TEST_DB_URL;
-    case "dev":
+    case 'dev':
       return process.env.DEV_DB_URL;
-    case "prod":
+    case 'prod':
       return process.env.PROD_DB_URL;
     default:
       return process.env.DEV_DB_URL;

@@ -1,17 +1,17 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-
-import HttpError from "../helpers/HttpError.js";
-import User from "../models/User.js";
+import 'dotenv/config';
+import HttpError from '../helpers/HttpError.js';
+import User from '../models/User.js';
 
 const { SECRET_KEY } = process.env;
 
-const updateUserWithToken = async (id) => {
+const updateUserWithToken = async id => {
   const token = jwt.sign({ id }, SECRET_KEY, { expiresIn: '24h' });
   return await User.findByIdAndUpdate(id, { token });
-}
+};
 
-const register = async (body) => {
+const register = async body => {
   const { email, password } = body;
   const candidate = await User.findOne({ email });
 
@@ -45,7 +45,7 @@ const login = async ({ email, password }) => {
   return await updateUserWithToken(user._id);
 };
 
-const authenticate = async (token) => {
+const authenticate = async token => {
   const { id } = jwt.verify(token, SECRET_KEY);
   return await findOne(id);
 };
