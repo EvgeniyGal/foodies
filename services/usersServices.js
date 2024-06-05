@@ -45,7 +45,13 @@ const login = async ({ email, password }) => {
   return await updateUserWithToken(user._id);
 };
 
+const authenticate = async (token) => {
+  const { id } = jwt.verify(token, SECRET_KEY);
+  return await User.findById(id);
+};
+
 export default {
   register,
-  login
+  login,
+  authenticate,
 };
