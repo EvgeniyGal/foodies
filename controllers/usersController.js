@@ -82,10 +82,32 @@ const removeFromFollowing = async (req, res) => {
   })
 };
 
+const getCurrentUser = (req, res) => {
+  const { _id, name, email, followers, following, avatar } = req.user;
+
+  res.json({
+    _id,
+    name,
+    email,
+    followers,
+    following,
+    avatar
+  })
+}
+
+const logout = async (req, res) => {
+  const { _id } = req.user;
+
+  await usersServices.update(_id, { token: null });
+  res.status(204).send();
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   updateAvatar: ctrlWrapper(updateAvatar),
   addToFollowing: ctrlWrapper(addToFollowing),
   removeFromFollowing: ctrlWrapper(removeFromFollowing),
+  getCurrentUser: ctrlWrapper(getCurrentUser),
+  logout: ctrlWrapper(logout),
 }

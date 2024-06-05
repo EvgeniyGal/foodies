@@ -5,6 +5,8 @@ import HttpError from '../helpers/HttpError.js';
 import User from '../models/User.js';
 
 const { SECRET_KEY } = process.env;
+const userProjection = '-password -createdAt -updatedAt';
+
 
 const updateUserWithToken = async id => {
   const token = jwt.sign({ id }, SECRET_KEY, { expiresIn: '24h' });
@@ -47,10 +49,16 @@ const login = async ({ email, password }) => {
 
 const authenticate = async token => {
   const { id } = jwt.verify(token, SECRET_KEY);
-  return await findOne(id);
+  const user = await findOne(id);
+
+  if (!user) {
+    throw HttpError(401, 'User not found');
+  }
+
+  return user;
 };
 
-const findOne = async (id) => await User.findById(id, '-password');
+const findOne = async (id) => await User.findById(id, userProjection);
 
 const update = async (id, body) => await User.findByIdAndUpdate(id, body);
 
