@@ -1,17 +1,14 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-import path from 'path';
-import dotenv from 'dotenv';
 import categoriesRouter from './routes/categoriesRouter.js';
 import areasRouter from './routes/areasRouter.js';
 import ingredientsRouter from './routes/ingredientsRouter.js';
 import testimonialsRouter from './routes/testimonialsRouter.js';
 import usersRouter from './routes/usersRouter.js';
 import recipesRouter from './routes/recipesRouter.js';
-import { db } from './db.js';
-
-dotenv.config({ path: path.resolve('.env.general') });
+import invalidUrlError from './helpers/invalidUrlError.js';
+import errorHandler from './helpers/errorHandler.js';
 
 const app = express();
 
@@ -27,24 +24,7 @@ app.use('/areas', areasRouter);
 app.use('/ingredients', ingredientsRouter);
 app.use('/testimonials', testimonialsRouter);
 app.use('/recipes', recipesRouter);
-
-app.use((_, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
-
-app.use((err, _, res, __) => {
-  const { status = 500, message = 'Server error' } = err;
-  res.status(status).json({ message });
-});
-
-if (process.env.NODE_ENV === 'prod' || process.env.NODE_ENV === 'dev') {
-  await db();
-
-  app.listen(process.env.PORT || 3000, () => {
-    console.log(
-      `App running. Use our API on port: ${process.env.PORT || 3000}`
-    );
-  });
-}
+app.use(invalidUrlError);
+app.use(errorHandler);
 
 export default app;
