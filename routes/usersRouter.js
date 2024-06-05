@@ -14,6 +14,8 @@ usersRouter.post('/login', validateBody(loginUserSchema), usersController.login)
 usersRouter.patch('/avatar', authenticate, uploadAvatar, usersController.updateAvatar);
 usersRouter.patch('/followings/:id', authenticate, isValidId, usersController.addToFollowing);
 usersRouter.delete('/followings/:id', authenticate, isValidId, usersController.removeFromFollowing);
+usersRouter.get('/followings', authenticate, usersController.getFollowing);
+usersRouter.get('/followers', authenticate, usersController.getFollowers);
 usersRouter.get('/current', authenticate, usersController.getCurrentUser);
 usersRouter.post('/logout', authenticate, usersController.logout);
 

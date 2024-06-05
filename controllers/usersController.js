@@ -82,6 +82,40 @@ const removeFromFollowing = async (req, res) => {
   })
 };
 
+const getFollowing = async (req, res) => {
+  const { id } = req.user;
+  const { following } = await usersServices.getFollowing(id);
+
+  const result = otherUsersListMap(following);
+
+  res.status(200).json({
+    following: result,
+  })
+}
+
+const getFollowers = async (req, res) => {
+  const { id } = req.user;
+  const { followers } = await usersServices.getFollowers(id);
+
+  const result = otherUsersListMap(followers);
+
+  res.status(200).json({
+    followers: result,
+  })
+}
+
+const otherUsersListMap = (userList) => {
+  return userList.map(({ _id, name, email, avatar, followers }) => {
+    return {
+      _id,
+      name,
+      email,
+      avatar,
+      followersQty: followers.length,
+    }
+  });
+}
+
 const getCurrentUser = (req, res) => {
   const { _id, name, email, followers, following, avatar } = req.user;
 
@@ -108,6 +142,8 @@ export default {
   updateAvatar: ctrlWrapper(updateAvatar),
   addToFollowing: ctrlWrapper(addToFollowing),
   removeFromFollowing: ctrlWrapper(removeFromFollowing),
+  getFollowing: ctrlWrapper(getFollowing),
+  getFollowers: ctrlWrapper(getFollowers),
   getCurrentUser: ctrlWrapper(getCurrentUser),
   logout: ctrlWrapper(logout),
 }

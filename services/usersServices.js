@@ -6,6 +6,7 @@ import User from '../models/User.js';
 
 const { SECRET_KEY } = process.env;
 const userProjection = '-password -createdAt -updatedAt';
+const otherUserProjection = 'name email avatar followers';
 
 
 const updateUserWithToken = async id => {
@@ -80,11 +81,17 @@ const removeFromFollowing = async (followerId, followingId) => {
   return await User.findByIdAndUpdate(followerId, { $pull: { following: followingId } })
 }
 
+const getFollowing = async (_id) => await User.findOne({ _id }).populate('following', otherUserProjection);
+const getFollowers = async (_id) => await User.findOne({ _id }).populate('followers', otherUserProjection);
+
 export default {
   register,
   login,
   authenticate,
+  findOne,
   update,
   addToFollowing,
   removeFromFollowing,
+  getFollowing,
+  getFollowers,
 };
