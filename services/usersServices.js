@@ -50,8 +50,11 @@ const authenticate = async (token) => {
   return await User.findById(id);
 };
 
+const update = async (id, body) => await User.findByIdAndUpdate(id, body);
+
 export default {
   register,
   login,
   authenticate,
+  update
 };
