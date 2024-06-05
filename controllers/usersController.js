@@ -60,8 +60,30 @@ const resizeAvatar = async (avatarPath) => {
 	await avatar.resize(250, 250).writeAsync(avatarPath);
 }
 
+const getCurrentUser = (req,res) => {
+  const {name, email, followers, following, avatar} = req.user;
+  console.log(req);
+
+  res.json({
+    name,
+    email,
+    followers,
+    following,
+    avatar
+  })
+}
+
+const logout = async (req, res) => {
+  const { _id } = req.user;
+
+  await usersServices.update(_id, { token: null });
+  res.status(204).send();
+};
+
 export default {
 	register: ctrlWrapper(register),
 	login: ctrlWrapper(login),
 	updateAvatar: ctrlWrapper(updateAvatar),
+  getCurrentUser: ctrlWrapper(getCurrentUser),
+  logout: ctrlWrapper(logout),
 }

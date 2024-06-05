@@ -47,7 +47,13 @@ const login = async ({ email, password }) => {
 
 const authenticate = async token => {
   const { id } = jwt.verify(token, SECRET_KEY);
-  return await User.findById(id);
+  const user = await User.findById(id);
+
+  if (!user) {
+    throw HttpError(401, 'User not found');
+  }
+
+  return user;
 };
 
 const update = async (id, body) => await User.findByIdAndUpdate(id, body);
