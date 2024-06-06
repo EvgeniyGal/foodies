@@ -5,7 +5,7 @@ import HttpError from '../helpers/HttpError.js';
 import User from '../models/User.js';
 
 const { SECRET_KEY } = process.env;
-const userProjection = '-password -createdAt -updatedAt';
+const userProjection = 'name token email avatar';
 const otherUserProjection = 'name email avatar followers';
 
 

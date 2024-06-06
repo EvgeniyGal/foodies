@@ -9,14 +9,18 @@ import { isValidId } from '../middleware/isValidId.js';
 
 const usersRouter = express.Router();
 
+// Public routes
 usersRouter.post('/register', validateBody(registerUserSchema), usersController.register);
 usersRouter.post('/login', validateBody(loginUserSchema), usersController.login);
-usersRouter.patch('/avatar', authenticate, uploadAvatar, usersController.updateAvatar);
-usersRouter.patch('/followings/:id', authenticate, isValidId, usersController.addToFollowing);
-usersRouter.delete('/followings/:id', authenticate, isValidId, usersController.removeFromFollowing);
-usersRouter.get('/followings', authenticate, usersController.getFollowing);
-usersRouter.get('/followers', authenticate, usersController.getFollowers);
-usersRouter.get('/current', authenticate, usersController.getCurrentUser);
-usersRouter.post('/logout', authenticate, usersController.logout);
+
+// Private routes
+usersRouter.use(authenticate);
+usersRouter.patch('/avatar', uploadAvatar, usersController.updateAvatar);
+usersRouter.patch('/followings/:id', isValidId, usersController.addToFollowing);
+usersRouter.delete('/followings/:id', isValidId, usersController.removeFromFollowing);
+usersRouter.get('/followings', usersController.getFollowing);
+usersRouter.get('/followers', usersController.getFollowers);
+usersRouter.get('/current', usersController.getCurrentUser);
+usersRouter.post('/logout', usersController.logout);
 
 export default usersRouter;

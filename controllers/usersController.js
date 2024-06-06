@@ -123,8 +123,6 @@ const getCurrentUser = (req, res) => {
     _id,
     name,
     email,
-    followers,
-    following,
     avatar
   })
 }
@@ -143,7 +141,7 @@ export default {
   addToFollowing: ctrlWrapper(addToFollowing),
   removeFromFollowing: ctrlWrapper(removeFromFollowing),
   getFollowing: ctrlWrapper(getFollowing),
-  getFollowers: ctrlWrapper(getFollowers),    
+  getFollowers: ctrlWrapper(getFollowers),
   getCurrentUser: ctrlWrapper(getCurrentUser),
   logout: ctrlWrapper(logout),
 }
