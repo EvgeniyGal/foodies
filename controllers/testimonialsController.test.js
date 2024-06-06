@@ -1,9 +1,9 @@
 import request from 'supertest';
-import Area from '../models/Area.js';
+import Testimonial from '../models/Testimonial.js';
 import app from '../app.js';
 import { db, closeDb } from '../db.js';
 
-describe('GET /areas', () => {
+describe('GET /testimonials', () => {
   let server = null;
 
   beforeAll(async () => {
@@ -17,25 +17,25 @@ describe('GET /areas', () => {
   });
 
   beforeEach(async () => {
-    await Area.deleteMany();
+    await Testimonial.deleteMany();
   });
 
   test('should return status 200', async () => {
-    const { statusCode } = await request(app).get('/areas');
+    const { statusCode } = await request(app).get('/testimonials');
 
     expect(statusCode).toBe(200);
   });
 
-  test('should return two areas', async () => {
-    const areas = [{ name: 'Area 1' }, { name: 'Area 2' }];
+  test('should return two testimonials', async () => {
+    const testimonials = [{ name: 'Testimonial 1' }, { name: 'Testimonial 2' }];
 
-    areas.forEach(async area => {
-      await Area.create(area);
+    testimonials.forEach(async testimonial => {
+      await Testimonial.create(testimonial);
     });
 
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const { statusCode, body } = await request(app).get('/areas');
+    const { statusCode, body } = await request(app).get('/testimonials');
 
     expect(statusCode).toBe(200);
     expect(body.length).toBe(2);
