@@ -1,12 +1,9 @@
-import request from "supertest";
-import {
-  addCategory,
-  deleteCategories,
-} from "../services/categoriesServices.js";
-import app from "../app.js";
-import { db, closeDb } from "../db.js";
+import request from 'supertest';
+import Category from '../models/Category.js';
+import app from '../app.js';
+import { db, closeDb } from '../db.js';
 
-describe("GET /categories", () => {
+describe('GET /categories', () => {
   let server = null;
 
   beforeAll(async () => {
@@ -20,24 +17,25 @@ describe("GET /categories", () => {
   });
 
   beforeEach(async () => {
-    await deleteCategories();
+    await Category.deleteMany();
   });
 
-  test("should return status 200", async () => {
-    const { statusCode } = await request(app).get("/categories");
+  test('should return status 200', async () => {
+    const { statusCode } = await request(app).get('/categories');
 
     expect(statusCode).toBe(200);
   });
 
-  test("should return two categories", async () => {
-    await addCategory({
-      name: "Category 1",
-    });
-    await addCategory({
-      name: "Category 2",
+  test('should return two categories', async () => {
+    const categories = [{ name: 'Category 1' }, { name: 'Category 2' }];
+
+    categories.forEach(async category => {
+      await Category.create(category);
     });
 
-    const { statusCode, body } = await request(app).get("/categories");
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const { statusCode, body } = await request(app).get('/categories');
 
     expect(statusCode).toBe(200);
     expect(body.length).toBe(2);
