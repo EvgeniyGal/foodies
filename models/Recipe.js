@@ -8,16 +8,18 @@ const recipeSchema = new Schema(
       required: true,
     },
     category: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Category',
       required: true,
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: 'users',
+      ref: 'user',
       required: true,
     },
     area: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'area',
       required: true,
     },
     instructions: {
@@ -35,9 +37,10 @@ const recipeSchema = new Schema(
     ingredients: {
       type: [
         {
+          _id: false,
           id: {
             type: Schema.Types.ObjectId,
-            ref: 'ingredients',
+            ref: 'Ingredient',
             required: true,
           },
           measure: {
@@ -63,5 +66,5 @@ recipeSchema.post('save', handleSaveError);
 recipeSchema.pre('findOneAndUpdate', setUpdateSettings);
 recipeSchema.post('findOneAndUpdate', handleSaveError);
 
-const Recipe = model('recipes', recipeSchema);
+const Recipe = model('recipe', recipeSchema);
 export default Recipe;
