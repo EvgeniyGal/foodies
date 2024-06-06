@@ -11,7 +11,7 @@ const listRecipes = async (filter, fields, settings) => {
     validateFilter['area'] = area;
   }
   if (ingredients) {
-    validateFilter['ingredients.id'] = {
+    validateFilter['ingredients._id'] = {
       $in: [Types.ObjectId.createFromHexString(ingredients)],
     };
   }

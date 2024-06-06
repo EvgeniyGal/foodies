@@ -3,6 +3,8 @@ import recipesController from '../controllers/recipesController.js';
 import validateBody from '../decorators/validateBody.js';
 import { recipeAddSchema } from '../schemas/recipeSchemas.js';
 import authenticate from '../middleware/authenticate.js';
+import { uploadRecipe } from '../middleware/upload.js';
+
 //public routes
 
 const recipesRouter = express.Router();
@@ -21,6 +23,7 @@ recipesRouter.get('/personal/data', recipesController.getOwnRecipes);
 
 recipesRouter.post(
   '/personal',
+  uploadRecipe,
   validateBody(recipeAddSchema),
   recipesController.addRecipe
 );

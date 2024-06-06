@@ -12,6 +12,11 @@ import {
   deleteFavorite,
   listPopular,
 } from '../services/favoriteServices.js';
+import resizer from '../helpers/resizer.js';
+import fs from 'fs/promises';
+import path from 'path';
+
+const recipePath = path.resolve('public', 'recipes');
 
 const getRecipesByFilter = async (req, res) => {
   const { category, area, ingredients } = req.body;
@@ -45,24 +50,32 @@ const getOwnRecipes = async (req, res) => {
 
 const addRecipe = async (req, res) => {
   const { _id: owner } = req.user;
+  if (!req.file) {
+    throw HttpError(401, 'File not found');
+  }
   const {
     title,
     category,
     area,
     instructions,
     description,
-    thumb,
     time,
     ingredients,
   } = req.body;
 
+  const { path: tmpPath, filename } = req.file;
+  await resizer(tmpPath, { h: 400, w: 550 });
+  const newPath = path.join(recipePath, filename);
+  await fs.rename(tmpPath, newPath);
+  const recipeURL = path.join('recipes', filename);
+  const { _id: id, measure } = ingredients;
   const recipe = await createNewRecipe({
     title,
     category,
     area,
     instructions,
     description,
-    thumb,
+    thumb: recipeURL,
     time,
     ingredients,
     owner,

@@ -6,9 +6,8 @@ export const recipeAddSchema = Joi.object({
   area: Joi.string().required(),
   instructions: Joi.string().required(),
   description: Joi.string().required(),
-  thumb: Joi.string().required(),
   ingredients: Joi.array()
-    .items({ id: Joi.string().required(), measure: Joi.string().required() })
+    .items({ _id: Joi.string().required(), measure: Joi.string().required() })
     .required(),
   time: Joi.string().required(),
 });
