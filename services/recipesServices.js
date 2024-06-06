@@ -11,24 +11,39 @@ const listRecipes = async (filter, fields, settings) => {
     validateFilter['area'] = area;
   }
   if (ingredients) {
-    validateFilter['ingredients._id'] = {
+    validateFilter['ingredients.id'] = {
       $in: [Types.ObjectId.createFromHexString(ingredients)],
     };
   }
   if (owner) {
     validateFilter['owner'] = owner;
   }
-  const resp = await Recipe.find(validateFilter, fields, settings);
+  const resp = await Recipe.find(validateFilter, fields, settings).populate([
+    { path: 'owner', select: 'name avatar' },
+    { path: 'category', select: 'name' },
+    { path: 'area', select: 'name' },
+    { path: 'ingredients.id', select: 'name img' },
+  ]);
   return resp ? resp : null;
 };
 
 const recipeById = async id => {
-  const resp = await Recipe.findById(id);
+  const resp = await Recipe.findById(id).populate([
+    { path: 'owner', select: 'name avatar' },
+    { path: 'category', select: 'name' },
+    { path: 'area', select: 'name' },
+    { path: 'ingredients.id', select: 'name img' },
+  ]);
   return resp ? resp : null;
 };
 
 const recipeByFilter = async filter => {
-  const resp = await Recipe.findOne(filter);
+  const resp = await Recipe.findOne(filter).populate([
+    { path: 'owner', select: 'name avatar' },
+    { path: 'category', select: 'name' },
+    { path: 'area', select: 'name' },
+    { path: 'ingredients.id', select: 'name img' },
+  ]);
   return resp ? resp : null;
 };
 
@@ -42,7 +57,7 @@ const deleteRecipeById = async id => {
   return resp ? resp : null;
 };
 
-export {
+export default {
   listRecipes,
   recipeById,
   recipeByFilter,

@@ -71,7 +71,10 @@ const listFavorites = async ({ user }) => {
   if (!Types.ObjectId.isValid(user)) {
     throw HttpError(409, `Invalid user id: ${user}`);
   }
-  const resp = await Favorite.find(filter);
+  const resp = await Favorite.find(filter).populate([
+    { path: 'users', select: 'name avatar' },
+    { path: 'recipe', select: 'title thumb' },
+  ]);
   return resp ? resp : null;
 };
 
@@ -88,4 +91,4 @@ const listPopular = async ({ skip, limit }) => {
   return resp;
 };
 
-export { addFavorite, deleteFavorite, listFavorites, listPopular };
+export default { addFavorite, deleteFavorite, listFavorites, listPopular };
