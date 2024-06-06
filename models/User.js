@@ -30,11 +30,11 @@ const userSchema = new Schema(
     },
     followers: {
       type: [{type: Schema.Types.ObjectId, ref: 'user'}],
-      defualt: [],
+      default: [],
     },
     following: {
       type: [{type: Schema.Types.ObjectId, ref: 'user'}],
-      defualt: [],
+      default: [],
     },
   },
 { versionKey: false, timestamps: true }
