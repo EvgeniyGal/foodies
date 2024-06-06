@@ -5,6 +5,9 @@ import HttpError from '../helpers/HttpError.js';
 import User from '../models/User.js';
 
 const { SECRET_KEY } = process.env;
+const userProjection = 'name token email avatar';
+const otherUserProjection = 'name email avatar followers';
+
 
 const updateUserWithToken = async id => {
   const token = jwt.sign({ id }, SECRET_KEY, { expiresIn: '24h' });
@@ -47,7 +50,9 @@ const login = async ({ email, password }) => {
 
 const authenticate = async token => {
   const { id } = jwt.verify(token, SECRET_KEY);
-  const user = await User.findById(id);
+
+  const user = await findOne(id);
+
 
   if (!user) {
     throw HttpError(401, 'User not found');
@@ -56,11 +61,39 @@ const authenticate = async token => {
   return user;
 };
 
+const findOne = async (id) => await User.findById(id, userProjection);
+
 const update = async (id, body) => await User.findByIdAndUpdate(id, body);
+
+const addToFollowing = async (followerId, followingId) => {
+  const followingUser = await User.findByIdAndUpdate(followingId, { $addToSet: { followers: followerId } });
+  if (!followingUser) {
+    throw HttpError(400, 'No user found to add to following list');
+  }
+
+  return await User.findByIdAndUpdate(followerId, { $addToSet: { following: followingId } })
+};
+
+const removeFromFollowing = async (followerId, followingId) => {
+  const followingUser = await User.findByIdAndUpdate(followingId, { $pull: { followers: followerId } });
+  if (!followingUser) {
+    throw HttpError(400, 'No user found to romove from following list');
+  }
+
+  return await User.findByIdAndUpdate(followerId, { $pull: { following: followingId } })
+}
+
+const getFollowing = async (_id) => await User.findOne({ _id }).populate('following', otherUserProjection);
+const getFollowers = async (_id) => await User.findOne({ _id }).populate('followers', otherUserProjection);
 
 export default {
   register,
   login,
   authenticate,
+  findOne,
   update,
+  addToFollowing,
+  removeFromFollowing,
+  getFollowing,
+  getFollowers,
 };

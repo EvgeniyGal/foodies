@@ -29,11 +29,11 @@ const userSchema = new Schema(
       required: true,
     },
     followers: {
-      type: [Schema.Types.ObjectId],
+      type: [{type: Schema.Types.ObjectId, ref: 'user'}],
       defualt: [],
     },
     following: {
-      type: [Schema.Types.ObjectId],
+      type: [{type: Schema.Types.ObjectId, ref: 'user'}],
       defualt: [],
     },
   },
