@@ -6,13 +6,13 @@ const favoriteSchema = new Schema(
     users: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'users',
+        ref: 'user',
         required: true,
       },
     ],
     recipe: {
       type: Schema.Types.ObjectId,
-      ref: 'recipes',
+      ref: 'recipe',
       required: true,
     },
   },
