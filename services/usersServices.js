@@ -3,10 +3,12 @@ import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import HttpError from '../helpers/HttpError.js';
 import User from '../models/User.js';
+import mongoose from 'mongoose';
 
 const { SECRET_KEY } = process.env;
 const userProjection = 'name token email avatar';
 const otherUserProjection = 'name email avatar followers';
+const recipeProjection = 'title instructions thumb';
 
 
 const updateUserWithToken = async id => {
@@ -84,7 +86,50 @@ const removeFromFollowing = async (followerId, followingId) => {
 }
 
 const getFollowing = async (_id) => await User.findOne({ _id }).populate('following', otherUserProjection);
+
 const getFollowers = async (_id) => await User.findOne({ _id }).populate('followers', otherUserProjection);
+
+const likeRecipe = async (_id, recipeId) => await User.findByIdAndUpdate(_id, { $addToSet: { favRecipes: recipeId } });
+
+const unlikeRecipe = async (_id, recipeId) => await User.findByIdAndUpdate(_id, { $pull: { favRecipes: recipeId } });
+
+const getFavoriteRecipes = async (_id) => await User.findOne({ _id }, 'favRecipes').populate('favRecipes', recipeProjection);
+
+const getUserInfo = async (id) => {
+  const [result] = await User.aggregate([
+    { $match: { _id: mongoose.Types.ObjectId.createFromHexString(id) } },
+    {
+      $addFields: {
+        favRecipes: { $ifNull: ['$favRecipes', []] },
+      }
+    },
+    {
+      $lookup: {
+        from: 'recipes',
+        localField: '_id',
+        foreignField: 'owner',
+        as: 'recipes',
+      }
+    },
+    {
+      $project: {
+        name: 1,
+        email: 1,
+        avatar: 1,
+        followersQty: { $size: '$followers' },
+        followingQty: { $size: '$following' },
+        favRecipesQty: { $size: '$favRecipes' },
+        recipesQty: { $size: '$recipes' },
+      }
+    }
+  ]);
+
+  if (!result) {
+    throw HttpError(401, 'User not found')
+  }
+
+  return result;
+}
 
 export default {
   register,
@@ -96,4 +141,8 @@ export default {
   removeFromFollowing,
   getFollowing,
   getFollowers,
+  getUserInfo,
+  likeRecipe,
+  getFavoriteRecipes,
+  unlikeRecipe,
 };

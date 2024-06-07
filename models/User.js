@@ -36,6 +36,10 @@ const userSchema = new Schema(
       type: [{type: Schema.Types.ObjectId, ref: 'user'}],
       default: [],
     },
+    favRecipes:  {
+      type: [{ type: Schema.Types.ObjectId, ref: 'recipe' }],
+      default: [],
+    },
   },
 { versionKey: false, timestamps: true }
 );
