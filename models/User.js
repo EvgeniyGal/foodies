@@ -24,16 +24,20 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
     avatar: {
       type: String,
       required: true,
     },
     followers: {
-      type: [{type: Schema.Types.ObjectId, ref: 'user'}],
+      type: [{ type: Schema.Types.ObjectId, ref: 'user' }],
       default: [],
     },
     following: {
-      type: [{type: Schema.Types.ObjectId, ref: 'user'}],
+      type: [{ type: Schema.Types.ObjectId, ref: 'user' }],
       default: [],
     },
     favRecipes:  {
@@ -41,7 +45,7 @@ const userSchema = new Schema(
       default: [],
     },
   },
-{ versionKey: false, timestamps: true }
+  { versionKey: false, timestamps: true }
 );
 
 userSchema.post('save', handleSaveError);

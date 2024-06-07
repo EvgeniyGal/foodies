@@ -4,6 +4,7 @@ import 'dotenv/config';
 import HttpError from '../helpers/HttpError.js';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
+import { nanoid } from 'nanoid';
 
 const { SECRET_KEY } = process.env;
 const userProjection = 'name token email avatar';
@@ -55,7 +56,6 @@ const authenticate = async token => {
 
   const user = await findOne(id);
 
-
   if (!user) {
     throw HttpError(401, 'User not found');
   }
@@ -63,31 +63,41 @@ const authenticate = async token => {
   return user;
 };
 
-const findOne = async (id) => await User.findById(id, userProjection);
+const findOne = async id => await User.findById(id, userProjection);
 
 const update = async (id, body) => await User.findByIdAndUpdate(id, body);
 
 const addToFollowing = async (followerId, followingId) => {
-  const followingUser = await User.findByIdAndUpdate(followingId, { $addToSet: { followers: followerId } });
+  const followingUser = await User.findByIdAndUpdate(followingId, {
+    $addToSet: { followers: followerId },
+  });
   if (!followingUser) {
     throw HttpError(400, 'No user found to add to following list');
   }
 
-  return await User.findByIdAndUpdate(followerId, { $addToSet: { following: followingId } })
+  return await User.findByIdAndUpdate(followerId, {
+    $addToSet: { following: followingId },
+  });
 };
 
 const removeFromFollowing = async (followerId, followingId) => {
-  const followingUser = await User.findByIdAndUpdate(followingId, { $pull: { followers: followerId } });
+  const followingUser = await User.findByIdAndUpdate(followingId, {
+    $pull: { followers: followerId },
+  });
   if (!followingUser) {
     throw HttpError(400, 'No user found to romove from following list');
   }
 
-  return await User.findByIdAndUpdate(followerId, { $pull: { following: followingId } })
-}
+  return await User.findByIdAndUpdate(followerId, {
+    $pull: { following: followingId },
+  });
+};
 
-const getFollowing = async (_id) => await User.findOne({ _id }).populate('following', otherUserProjection);
+const getFollowing = async _id =>
+  await User.findOne({ _id }).populate('following', otherUserProjection);
 
-const getFollowers = async (_id) => await User.findOne({ _id }).populate('followers', otherUserProjection);
+const getFollowers = async _id =>
+  await User.findOne({ _id }).populate('followers', otherUserProjection);
 
 const likeRecipe = async (_id, recipeId) => await User.findByIdAndUpdate(_id, { $addToSet: { favRecipes: recipeId } });
 
@@ -131,6 +141,31 @@ const getUserInfo = async (id) => {
   return result;
 }
 
+const getResetToken = async email => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw HttpError(404, 'User not found');
+  }
+  const resetToken = nanoid();
+  await User.findOneAndUpdate({ email }, { resetPasswordToken: resetToken });
+  return resetToken;
+};
+
+const resetPassword = async (resetToken, password) => {
+  const user = await User.findOne({ resetPasswordToken: resetToken });
+  if (!user) {
+    throw HttpError(404, 'User not found');
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  User.findOneAndUpdate(
+    { resetPasswordToken: resetToken },
+    {
+      password: hashedPassword,
+      resetPasswordToken: null,
+    }
+  );
+};
+
 export default {
   register,
   login,
@@ -145,4 +180,6 @@ export default {
   likeRecipe,
   getFavoriteRecipes,
   unlikeRecipe,
+  getResetToken,
+  resetPassword,
 };
