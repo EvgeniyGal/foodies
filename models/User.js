@@ -24,20 +24,24 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
     avatar: {
       type: String,
       required: true,
     },
     followers: {
-      type: [{type: Schema.Types.ObjectId, ref: 'user'}],
+      type: [{ type: Schema.Types.ObjectId, ref: 'user' }],
       defualt: [],
     },
     following: {
-      type: [{type: Schema.Types.ObjectId, ref: 'user'}],
+      type: [{ type: Schema.Types.ObjectId, ref: 'user' }],
       defualt: [],
     },
   },
-{ versionKey: false, timestamps: true }
+  { versionKey: false, timestamps: true }
 );
 
 userSchema.post('save', handleSaveError);
