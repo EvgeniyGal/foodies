@@ -4,6 +4,7 @@ import responseWrapper from '../decorators/responseWrapper.js';
 import resizer from '../helpers/resizer.js';
 import fs from 'fs/promises';
 import path from 'path';
+import HttpError from '../helpers/HttpError.js';
 
 const recipePath = path.resolve('public', 'recipes');
 

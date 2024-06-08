@@ -43,7 +43,7 @@ const createNewRecipe = async recipe => {
   return resp ? resp : null;
 };
 
-const deleteRecipeById = async id => {
+const deleteRecipeById = async filter => {
   const resp = await Recipe.findOneAndDelete(filter);
   return resp ? resp : null;
 };
