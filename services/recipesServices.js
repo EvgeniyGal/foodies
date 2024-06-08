@@ -38,16 +38,6 @@ const recipeById = async id => {
   return resp ? resp : null;
 };
 
-const recipeByFilter = async filter => {
-  const resp = await Recipe.findOne(filter).populate([
-    { path: 'owner', select: 'name avatar' },
-    { path: 'category', select: 'name' },
-    { path: 'area', select: 'name' },
-    { path: 'ingredients.id', select: 'name img' },
-  ]);
-  return resp ? resp : null;
-};
-
 const createNewRecipe = async recipe => {
   const resp = await Recipe.create(recipe);
   return resp ? resp : null;
@@ -70,8 +60,8 @@ const getPopular = async (skip, limit = 10) => {
         from: 'recipes',
         localField: '_id',
         foreignField: '_id',
-        as: 'recipe'
-      }
+        as: 'recipe',
+      },
     },
     { $unwind: '$recipe' },
     {
@@ -79,8 +69,8 @@ const getPopular = async (skip, limit = 10) => {
         from: 'users',
         localField: 'recipe.owner',
         foreignField: '_id',
-        as: 'owner'
-      }
+        as: 'owner',
+      },
     },
     { $unwind: '$owner' },
     {
@@ -91,17 +81,16 @@ const getPopular = async (skip, limit = 10) => {
         thumb: '$recipe.thumb',
         owner: { avatar: '$owner.avatar', name: '$owner.name' },
         count: 1,
-      }
-    }
+      },
+    },
   ]);
 
   return result;
-}
+};
 
 export default {
   listRecipes,
   recipeById,
-  recipeByFilter,
   createNewRecipe,
   deleteRecipeById,
   getPopular,

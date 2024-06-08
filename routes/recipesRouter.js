@@ -15,6 +15,8 @@ recipesRouter.get('/:id', recipesController.getRecipeById);
 
 recipesRouter.get('/popular/list', recipesController.getPopularRecipes);
 
+recipesRouter.get('/user/:id', recipesController.getUserRecipes);
+
 //private routes
 
 recipesRouter.use(authenticate);
