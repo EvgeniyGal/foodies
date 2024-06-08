@@ -65,17 +65,13 @@ const resizeAvatar = async avatarPath => {
 };
 
 const addToFollowing = async (req, res) => {
-  const { _id } = req.user;
-  const { userId, followingId } = req.params;
+  const { _id: userId } = req.user;
+  const { id: followingId } = req.params;
 
-  if (_id !== userId) {
-    throw HttpError(403);
-  }
-
-  const { following } = await usersServices.addToFollowing(userId, followingId);
+  await usersServices.addToFollowing(userId, followingId);
 
   res.status(200).json({
-    following,
+    status: 'ok',
   });
 };
 
@@ -83,13 +79,10 @@ const removeFromFollowing = async (req, res) => {
   const { _id: userId } = req.user;
   const { id: followingId } = req.params;
 
-  const { following } = await usersServices.removeFromFollowing(
-    userId,
-    followingId
-  );
+  await usersServices.removeFromFollowing(userId, followingId);
 
   res.status(200).json({
-    following,
+    status: 'ok',
   });
 };
 
