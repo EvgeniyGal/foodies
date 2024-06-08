@@ -11,7 +11,6 @@ const userProjection = 'name token email avatar';
 const otherUserProjection = 'name email avatar followers';
 const recipeProjection = 'title instructions thumb';
 
-
 const updateUserWithToken = async id => {
   const token = jwt.sign({ id }, SECRET_KEY, { expiresIn: '24h' });
   return await User.findByIdAndUpdate(id, { token });
@@ -99,19 +98,25 @@ const getFollowing = async _id =>
 const getFollowers = async _id =>
   await User.findOne({ _id }).populate('followers', otherUserProjection);
 
-const likeRecipe = async (_id, recipeId) => await User.findByIdAndUpdate(_id, { $addToSet: { favRecipes: recipeId } });
+const likeRecipe = async (_id, recipeId) =>
+  await User.findByIdAndUpdate(_id, { $addToSet: { favRecipes: recipeId } });
 
-const unlikeRecipe = async (_id, recipeId) => await User.findByIdAndUpdate(_id, { $pull: { favRecipes: recipeId } });
+const unlikeRecipe = async (_id, recipeId) =>
+  await User.findByIdAndUpdate(_id, { $pull: { favRecipes: recipeId } });
 
-const getFavoriteRecipes = async (_id) => await User.findOne({ _id }, 'favRecipes').populate('favRecipes', recipeProjection);
+const getFavoriteRecipes = async _id =>
+  await User.findOne({ _id }, 'favRecipes').populate(
+    'favRecipes',
+    recipeProjection
+  );
 
-const getUserInfo = async (id) => {
+const getUserInfo = async id => {
   const [result] = await User.aggregate([
     { $match: { _id: mongoose.Types.ObjectId.createFromHexString(id) } },
     {
       $addFields: {
         favRecipes: { $ifNull: ['$favRecipes', []] },
-      }
+      },
     },
     {
       $lookup: {
@@ -119,7 +124,7 @@ const getUserInfo = async (id) => {
         localField: '_id',
         foreignField: 'owner',
         as: 'recipes',
-      }
+      },
     },
     {
       $project: {
@@ -130,16 +135,16 @@ const getUserInfo = async (id) => {
         followingQty: { $size: '$following' },
         favRecipesQty: { $size: '$favRecipes' },
         recipesQty: { $size: '$recipes' },
-      }
-    }
+      },
+    },
   ]);
 
   if (!result) {
-    throw HttpError(401, 'User not found')
+    throw HttpError(401, 'User not found');
   }
 
   return result;
-}
+};
 
 const getResetToken = async email => {
   const user = await User.findOne({ email });
@@ -160,6 +165,7 @@ const resetPassword = async (resetToken, password) => {
   User.findOneAndUpdate(
     { resetPasswordToken: resetToken },
     {
+      token: '',
       password: hashedPassword,
       resetPasswordToken: null,
     }
