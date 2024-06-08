@@ -96,6 +96,17 @@ const getPopularRecipes = async (req, res) => {
   responseWrapper(result, 404, res, 200);
 };
 
+const getUserRecipes = async (req, res) => {
+  const { id: owner } = req.params;
+  const filter = { owner };
+  const fields = '';
+  const { page = 1, limit = 20 } = req.query;
+  const skip = (page - 1) * limit;
+  const settings = { skip, limit };
+  const result = await recipesServices.listRecipes(filter, fields, settings);
+  responseWrapper(result, 404, res, 200);
+};
+
 export default {
   getRecipesByFilter: ctrlWrapper(getRecipesByFilter),
   getRecipeById: ctrlWrapper(getRecipeById),
@@ -103,4 +114,5 @@ export default {
   addRecipe: ctrlWrapper(addRecipe),
   deleteRecipe: ctrlWrapper(deleteRecipe),
   getPopularRecipes: ctrlWrapper(getPopularRecipes),
+  getUserRecipes: ctrlWrapper(getUserRecipes),
 };
