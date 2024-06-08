@@ -7,7 +7,7 @@ import gravatar from 'gravatar';
 import HttpError from '../helpers/HttpError.js';
 import Jimp from 'jimp';
 import sgMail from '@sendgrid/mail';
-import { getResetPasswordMsg } from './emailTemplates.js';
+import { getResetPasswordMsg } from '../helpers/emailTemplates.js';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -145,7 +145,7 @@ const likeRecipe = async (req, res) => {
 
   res.status(200).json({
     favRecipes,
-  })
+  });
 };
 
 const unlikeRecipe = async (req, res) => {
@@ -155,7 +155,7 @@ const unlikeRecipe = async (req, res) => {
 
   res.status(200).json({
     favRecipes,
-  })
+  });
 };
 
 const getFavoriteRecipes = async (req, res) => {
