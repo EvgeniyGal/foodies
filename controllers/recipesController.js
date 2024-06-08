@@ -1,7 +1,6 @@
 import recipesServices from '../services/recipesServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import responseWrapper from '../decorators/responseWrapper.js';
-import favoriteServices from '../services/favoriteServices.js';
 import resizer from '../helpers/resizer.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -89,43 +88,11 @@ const deleteRecipe = async (req, res) => {
   responseWrapper(recipe, 404, res, 200);
 };
 
-const likeRecipe = async (req, res) => {
-  const { _id: user } = req.user;
-  const { id } = req.params;
-  const filter = { recipe: id, user };
-  const recipe = await favoriteServices.addFavorite(filter);
-  responseWrapper(recipe, 404, res, 200);
-};
-
-const unlikeRecipe = async (req, res) => {
-  const { _id: user } = req.user;
-  const { id } = req.params;
-  const filter = { recipe: id, user };
-  const recipe = await favoriteServices.deleteFavorite(filter);
-  responseWrapper(recipe, 404, res, 200);
-};
-
-const getFavoriteRecipes = async (req, res) => {
-  const { _id: user } = req.user;
-  const filter = { user };
-  const fields = '';
-  const { page = 1, limit = 20 } = req.query;
-  const skip = (page - 1) * limit;
-  const settings = { skip, limit };
-  const allRecipes = await favoriteServices.listFavorites(
-    filter,
-    fields,
-    settings
-  );
-  responseWrapper(allRecipes, 404, res, 200);
-};
-
 const getPopularRecipes = async (req, res) => {
   const { page = 1, limit = 20 } = req.query;
   const skip = (page - 1) * limit;
-  const settings = { skip, limit };
-  const allRecipes = await favoriteServices.listPopular(settings);
-  responseWrapper(allRecipes, 404, res, 200);
+  const result = await recipesServices.getPopular(skip, parseInt(limit));
+  responseWrapper(result, 404, res, 200);
 };
 
 export default {
@@ -134,8 +101,5 @@ export default {
   getOwnRecipes: ctrlWrapper(getOwnRecipes),
   addRecipe: ctrlWrapper(addRecipe),
   deleteRecipe: ctrlWrapper(deleteRecipe),
-  likeRecipe: ctrlWrapper(likeRecipe),
-  unlikeRecipe: ctrlWrapper(unlikeRecipe),
-  getFavoriteRecipes: ctrlWrapper(getFavoriteRecipes),
   getPopularRecipes: ctrlWrapper(getPopularRecipes),
 };

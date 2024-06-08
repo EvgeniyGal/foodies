@@ -38,16 +38,17 @@ usersRouter.post(
 
 // Private routes
 usersRouter.use(authenticate);
-usersRouter.patch('/avatar', uploadAvatar, usersController.updateAvatar);
-usersRouter.patch('/followings/:id', isValidId, usersController.addToFollowing);
-usersRouter.delete(
-  '/followings/:id',
-  isValidId,
-  usersController.removeFromFollowing
-);
 usersRouter.get('/followings', usersController.getFollowing);
 usersRouter.get('/followers', usersController.getFollowers);
 usersRouter.get('/current', usersController.getCurrentUser);
+usersRouter.get('/:id', isValidId, usersController.getUserProfile);
+usersRouter.patch('/avatar', uploadAvatar, usersController.updateAvatar);
+usersRouter.patch('/followings/:id', isValidId, usersController.addToFollowing);
+usersRouter.delete('/followings/:id', isValidId, usersController.removeFromFollowing);
 usersRouter.post('/logout', usersController.logout);
+
+usersRouter.get('/:id/recipes/favorite', isValidId, usersController.getFavoriteRecipes);
+usersRouter.patch('/recipes/favorite/:id', isValidId, usersController.likeRecipe);
+usersRouter.delete('/recipes/favorite/:id', isValidId, usersController.unlikeRecipe);
 
 export default usersRouter;

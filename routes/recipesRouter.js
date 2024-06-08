@@ -28,12 +28,6 @@ recipesRouter.post(
   recipesController.addRecipe
 );
 
-recipesRouter.get('/favorite/list', recipesController.getFavoriteRecipes);
-
 recipesRouter.delete('/:id', recipesController.deleteRecipe);
-
-recipesRouter.patch('/:id/like', recipesController.likeRecipe);
-
-recipesRouter.patch('/:id/unlike', recipesController.unlikeRecipe);
 
 export default recipesRouter;
