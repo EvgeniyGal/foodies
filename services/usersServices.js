@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import 'dotenv/config';
 import HttpError from '../helpers/HttpError.js';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
@@ -8,7 +7,6 @@ import { nanoid } from 'nanoid';
 
 const { SECRET_KEY } = process.env;
 const userProjection = 'name token email avatar';
-const otherUserProjection = 'name email avatar followers';
 const recipeProjection = 'title instructions thumb';
 
 const updateUserWithToken = async id => {
@@ -66,7 +64,7 @@ const findOne = async id => await User.findById(id, userProjection);
 
 const update = async (id, body) => await User.findByIdAndUpdate(id, body);
 
-const addToFollowing = async (followerId, followingId) => {
+const followUser = async (followerId, followingId) => {
   const followingUser = await User.findByIdAndUpdate(followingId, {
     $addToSet: { followers: followerId },
   });
@@ -79,7 +77,7 @@ const addToFollowing = async (followerId, followingId) => {
   });
 };
 
-const removeFromFollowing = async (followerId, followingId) => {
+const unfollowUser = async (followerId, followingId) => {
   const followingUser = await User.findByIdAndUpdate(followingId, {
     $pull: { followers: followerId },
   });
@@ -92,11 +90,80 @@ const removeFromFollowing = async (followerId, followingId) => {
   });
 };
 
-const getFollowing = async _id =>
-  await User.findOne({ _id }).populate('following', otherUserProjection);
+const getFollowUserList = async (_id, listType) => {
+  if (!['following', 'followers'].includes(listType)) {
+    throw HttpError(500, 'Unknown user list type');
+  }
 
-const getFollowers = async _id =>
-  await User.findOne({ _id }).populate('followers', otherUserProjection);
+  const RECIPES_NUMBER = 10;
+
+  const pipeline = [
+    { $match: { _id: mongoose.Types.ObjectId.createFromHexString(_id) } },
+    {
+      $lookup: {
+        from: "users",
+        localField: listType,
+        foreignField: "_id",
+        as: listType
+      }
+    },
+    {
+      $lookup: {
+        from: "recipes",
+        localField: listType,
+        foreignField: "owner",
+        as: "recipes"
+      }
+    },
+    { $unwind: `$${listType}` },
+    {
+      $lookup: {
+        from: "recipes",
+        localField: `${listType}._id`,
+        foreignField: "owner",
+        pipeline: [
+          {
+            $project: {
+              _id: 0,
+              title: 1,
+              thumb: 1
+            }
+          }
+        ],
+        as: `${listType}.recipes`
+      }
+    },
+    {
+      $addFields: {
+        [`${listType}.recipesCount`]: { $size: `$${listType}.recipes` },
+        [`${listType}.recipes`]: { $slice: [`$${listType}.recipes`, RECIPES_NUMBER] }
+      }
+    },
+    {
+      $group: {
+        _id: "$_id",
+        [`${listType}`]: {
+          $push: {
+            _id: `$${listType}._id`,
+            name: `$${listType}.name`,
+            avatar: `$${listType}.avatar`,
+            recipesCount: `$${listType}.recipesCount`,
+            recipes: `$${listType}.recipes`
+          }
+        },
+      }
+    }
+  ];
+
+  const userList = await User.aggregate(pipeline);
+
+  return userList;
+
+}
+
+const getFollowing = async _id => await getFollowUserList(_id, 'following');
+
+const getFollowers = async _id => await getFollowUserList(_id, 'followers');
 
 const likeRecipe = async (_id, recipeId) =>
   await User.findByIdAndUpdate(_id, { $addToSet: { favRecipes: recipeId } });
@@ -178,8 +245,8 @@ export default {
   authenticate,
   findOne,
   update,
-  addToFollowing,
-  removeFromFollowing,
+  followUser,
+  unfollowUser,
   getFollowing,
   getFollowers,
   getUserInfo,

@@ -64,60 +64,34 @@ const resizeAvatar = async avatarPath => {
   await avatar.resize(250, 250).writeAsync(avatarPath);
 };
 
-const addToFollowing = async (req, res) => {
+const followUser = async (req, res) => {
   const { _id: userId } = req.user;
   const { id: followingId } = req.params;
 
-  await usersServices.addToFollowing(userId, followingId);
-
-  res.status(200).json({
-    status: 'ok',
-  });
+  await usersServices.followUser(userId, followingId);
+  await getFollowing(req, res);
 };
 
-const removeFromFollowing = async (req, res) => {
+const unfollowUser = async (req, res) => {
   const { _id: userId } = req.user;
   const { id: followingId } = req.params;
 
-  await usersServices.removeFromFollowing(userId, followingId);
-
-  res.status(200).json({
-    status: 'ok',
-  });
+  await usersServices.unfollowUser(userId, followingId);
+  await getFollowing(req, res);
 };
 
 const getFollowing = async (req, res) => {
   const { id } = req.user;
-  const { following } = await usersServices.getFollowing(id);
+  const [result] = await usersServices.getFollowing(id);
 
-  const result = otherUsersListMap(following);
-
-  res.status(200).json({
-    following: result,
-  });
+  res.status(200).json({following: result.following});
 };
 
 const getFollowers = async (req, res) => {
   const { id } = req.user;
-  const { followers } = await usersServices.getFollowers(id);
+  const [result]  = await usersServices.getFollowers(id);
 
-  const result = otherUsersListMap(followers);
-
-  res.status(200).json({
-    followers: result,
-  });
-};
-
-const otherUsersListMap = userList => {
-  return userList.map(({ _id, name, email, avatar, followers }) => {
-    return {
-      _id,
-      name,
-      email,
-      avatar,
-      followersQty: followers.length,
-    };
-  });
+  res.status(200).json({followers: result.followers});
 };
 
 const getCurrentUser = (req, res) => {
@@ -202,8 +176,8 @@ export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   updateAvatar: ctrlWrapper(updateAvatar),
-  addToFollowing: ctrlWrapper(addToFollowing),
-  removeFromFollowing: ctrlWrapper(removeFromFollowing),
+  followUser: ctrlWrapper(followUser),
+  unfollowUser: ctrlWrapper(unfollowUser),
   getFollowing: ctrlWrapper(getFollowing),
   getFollowers: ctrlWrapper(getFollowers),
   getCurrentUser: ctrlWrapper(getCurrentUser),

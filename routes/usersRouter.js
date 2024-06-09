@@ -43,8 +43,8 @@ usersRouter.get('/followers', usersController.getFollowers);
 usersRouter.get('/current', usersController.getCurrentUser);
 usersRouter.get('/:id', isValidId, usersController.getUserProfile);
 usersRouter.patch('/avatar', uploadAvatar, usersController.updateAvatar);
-usersRouter.patch('/followings/:id', isValidId, usersController.addToFollowing);
-usersRouter.delete('/followings/:id', isValidId, usersController.removeFromFollowing);
+usersRouter.patch('/followings/:id', isValidId, usersController.followUser);
+usersRouter.delete('/followings/:id', isValidId, usersController.unfollowUser);
 usersRouter.post('/logout', usersController.logout);
 
 usersRouter.get('/recipes/favorite', usersController.getFavoriteRecipes);
