@@ -47,7 +47,7 @@ usersRouter.patch('/followings/:id', isValidId, usersController.addToFollowing);
 usersRouter.delete('/followings/:id', isValidId, usersController.removeFromFollowing);
 usersRouter.post('/logout', usersController.logout);
 
-usersRouter.get('/recipes/favorite', isValidId, usersController.getFavoriteRecipes);
+usersRouter.get('/recipes/favorite', usersController.getFavoriteRecipes);
 usersRouter.patch('/recipes/favorite/:id', isValidId, usersController.likeRecipe);
 usersRouter.delete('/recipes/favorite/:id', isValidId, usersController.unlikeRecipe);
 
