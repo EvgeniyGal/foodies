@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import 'dotenv/config';
 import HttpError from '../helpers/HttpError.js';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
@@ -8,7 +7,6 @@ import { nanoid } from 'nanoid';
 
 const { SECRET_KEY } = process.env;
 const userProjection = 'name token email avatar';
-const otherUserProjection = 'name email avatar followers';
 const recipeProjection = 'title instructions thumb';
 
 const updateUserWithToken = async id => {
