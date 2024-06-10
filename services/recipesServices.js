@@ -1,6 +1,6 @@
 import Recipe from '../models/Recipe.js';
 import User from '../models/User.js';
-import { Types } from 'mongoose';
+import { Types, set } from 'mongoose';
 
 const listRecipes = async (filter, fields, settings) => {
   const { category, area, ingredients, owner } = filter;
@@ -19,13 +19,19 @@ const listRecipes = async (filter, fields, settings) => {
   if (owner) {
     validateFilter['owner'] = owner;
   }
+
+  const total = await Recipe.countDocuments(validateFilter);
+  if (total === 0 || total <= settings.skip) {
+    return null;
+  }
+
   const resp = await Recipe.find(validateFilter, fields, settings).populate([
     { path: 'owner', select: 'name avatar' },
     { path: 'category', select: 'name' },
     { path: 'area', select: 'name' },
     { path: 'ingredients.id', select: 'name img' },
   ]);
-  return resp ? resp : null;
+  return resp ? { total, ...resp } : null;
 };
 
 const recipeById = async id => {
@@ -48,13 +54,25 @@ const deleteRecipeById = async filter => {
   return resp ? resp : null;
 };
 
-const getPopular = async (skip, limit = 10) => {
-  const result = await User.aggregate([
+const getPopular = async (skip, limit) => {
+  const totalResults = await User.aggregate([
+    { $unwind: '$favRecipes' },
+    { $group: { _id: '$favRecipes', count: { $sum: 1 } } },
+    { $count: 'total' },
+  ]);
+
+  const total = totalResults.length > 0 ? totalResults[0].total : 0;
+
+  if (total === 0 || total <= skip) {
+    return null;
+  }
+
+  const resp = await User.aggregate([
     { $unwind: '$favRecipes' },
     { $group: { _id: '$favRecipes', count: { $sum: 1 } } },
     { $sort: { count: -1 } },
     { $skip: skip },
-    { $limit: limit },
+    { $limit: parseInt(limit) },
     {
       $lookup: {
         from: 'recipes',
@@ -85,7 +103,7 @@ const getPopular = async (skip, limit = 10) => {
     },
   ]);
 
-  return result;
+  return resp ? { total, ...resp } : null;
 };
 
 export default {
