@@ -31,7 +31,7 @@ const listRecipes = async (filter, fields, settings) => {
     { path: 'area', select: 'name' },
     { path: 'ingredients.id', select: 'name img' },
   ]);
-  return resp ? { total, ...resp } : null;
+  return resp ? { total, recipes: resp } : null;
 };
 
 const recipeById = async id => {
@@ -97,13 +97,17 @@ const getPopular = async (skip, limit) => {
         title: '$recipe.title',
         instructions: '$recipe.instructions',
         thumb: '$recipe.thumb',
-        owner: { avatar: '$owner.avatar', name: '$owner.name' },
+        owner: {
+          _id: '$owner._id',
+          avatar: '$owner.avatar',
+          name: '$owner.name',
+        },
         count: 1,
       },
     },
   ]);
 
-  return resp ? { total, ...resp } : null;
+  return resp ? { total, resipes: resp } : null;
 };
 
 export default {
