@@ -146,6 +146,7 @@ usersRouter.post(
 
 // Private routes
 usersRouter.use(authenticate);
+
 usersRouter.get(
   '/followings',
   usersController.getFollowing
@@ -322,6 +323,7 @@ usersRouter.patch(
         }   
     */
 );
+
 
 usersRouter.delete(
   '/recipes/favorite/:id',
