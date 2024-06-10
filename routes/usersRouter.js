@@ -243,7 +243,7 @@ usersRouter.patch(
 usersRouter.patch(
   '/followings/:id',
   isValidId,
-  usersController.addToFollowing
+  usersController.followUser
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
   /* #swagger.responses[200] = {
@@ -260,7 +260,7 @@ usersRouter.patch(
 usersRouter.delete(
   '/followings/:id',
   isValidId,
-  usersController.removeFromFollowing
+  usersController.unfollowUser
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
   /* #swagger.responses[200] = {
@@ -289,7 +289,6 @@ usersRouter.post(
         }   
     */
 );
-
 usersRouter.get(
   '/recipes/favorite',
   usersController.getFavoriteRecipes
@@ -323,8 +322,6 @@ usersRouter.patch(
         }   
     */
 );
-
-
 usersRouter.delete(
   '/recipes/favorite/:id',
   isValidId,
