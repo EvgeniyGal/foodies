@@ -9,6 +9,10 @@ import usersRouter from './routes/usersRouter.js';
 import recipesRouter from './routes/recipesRouter.js';
 import invalidUrlError from './helpers/invalidUrlError.js';
 import errorHandler from './helpers/errorHandler.js';
+import swaggerUi from 'swagger-ui-express';
+import jsonLoader from './helpers/jsonLoader.js';
+
+const swaggerFile = await jsonLoader('../docs/swagger-output.json');
 
 const app = express();
 
@@ -17,6 +21,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use('/users', usersRouter);
 app.use('/categories', categoriesRouter);
