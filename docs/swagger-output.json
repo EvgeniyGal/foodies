@@ -1216,6 +1216,7 @@
               "application/xml": {
                 "schema": {
                   "$ref": "#/components/schemas/recipesResponse"
+
                 }
               }
             }

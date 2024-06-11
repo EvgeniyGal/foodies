@@ -146,25 +146,197 @@ usersRouter.post(
 
 // Private routes
 usersRouter.use(authenticate);
-usersRouter.get('/followings', usersController.getFollowing);
-usersRouter.get('/followers', usersController.getFollowers);
-usersRouter.get('/current', usersController.getCurrentUser);
-usersRouter.get('/:id', isValidId, usersController.getUserProfile);
-usersRouter.patch('/avatar', uploadAvatar, usersController.updateAvatar);
-usersRouter.patch('/followings/:id', isValidId, usersController.followUser);
-usersRouter.delete('/followings/:id', isValidId, usersController.unfollowUser);
-usersRouter.post('/logout', usersController.logout);
-
-usersRouter.get('/recipes/favorite', usersController.getFavoriteRecipes);
+usersRouter.get(
+  '/followings',
+  usersController.getFollowing
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userFollowingsResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
+usersRouter.get(
+  '/followers',
+  usersController.getFollowers
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userFollowersResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
+usersRouter.get(
+  '/current',
+  usersController.getCurrentUser
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userCurrentResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
+usersRouter.get(
+  '/:id',
+  isValidId,
+  usersController.getUserProfile
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userByIdResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
+usersRouter.patch(
+  '/avatar',
+  uploadAvatar,
+  usersController.updateAvatar
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/userPatchAvatarBody"
+                    }  
+                }
+            }
+        } 
+    */
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userPatchAvatarResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
+usersRouter.patch(
+  '/followings/:id',
+  isValidId,
+  usersController.followUser
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userFollowingsResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
+usersRouter.delete(
+  '/followings/:id',
+  isValidId,
+  usersController.unfollowUser
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userFollowingsResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
+usersRouter.post(
+  '/logout',
+  usersController.logout
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[204] = {
+            description: "No Content",
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
+usersRouter.get(
+  '/recipes/favorite',
+  usersController.getFavoriteRecipes
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userRecipesResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
+);
 usersRouter.patch(
   '/recipes/favorite/:id',
   isValidId,
   usersController.likeRecipe
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userRecipesResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
 );
 usersRouter.delete(
   '/recipes/favorite/:id',
   isValidId,
   usersController.unlikeRecipe
+  // #swagger.tags = ['Users']
+  // #swagger.description = 'Authenticated user route'
+  /* #swagger.responses[200] = {
+            description: "OK",
+            schema: { $ref: '#/components/schemas/userRecipesResponse' }
+        }   
+    */
+  /* #swagger.responses[404] = {
+            description: "Bad request",
+            schema: { $ref: '#/components/schemas/errorMessage' }
+        }   
+    */
 );
 
 export default usersRouter;
