@@ -47,7 +47,7 @@ recipesRouter.get(
   // #swagger.tags = ['Recipes']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/userRecipesResponse' }
+            schema: { $ref: '#/components/schemas/popularRecipes' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -84,7 +84,7 @@ recipesRouter.get(
   // #swagger.description = 'Authenticated user route'
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/userRecipesResponse' }
+            schema: { $ref: '#/components/schemas/recipesResponse' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -114,7 +114,7 @@ recipesRouter.post(
     */
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/recipeResponse' }
+            schema: { $ref: '#/components/schemas/recipeResponsePost' }
         }   
     */
   /* #swagger.responses[404] = {

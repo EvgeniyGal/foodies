@@ -146,7 +146,6 @@ usersRouter.post(
 
 // Private routes
 usersRouter.use(authenticate);
-
 usersRouter.get(
   '/followings',
   usersController.getFollowing

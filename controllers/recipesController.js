@@ -9,13 +9,11 @@ import HttpError from '../helpers/HttpError.js';
 const recipePath = path.resolve('public', 'recipes');
 
 const getRecipesByFilter = async (req, res) => {
-  const { category, area, ingredients } = req.body;
+  const { page = 1, limit = 20, category, area, ingredients } = req.query;
   const filter = { category, area, ingredients };
   const fields = '';
-  const { page = 1, limit = 20 } = req.query;
   const skip = (page - 1) * limit;
   const settings = { skip, limit };
-
   const allRecipes = await recipesServices.listRecipes(
     filter,
     fields,
@@ -31,10 +29,9 @@ const getRecipeById = async (req, res) => {
 
 const getOwnRecipes = async (req, res) => {
   const { _id: owner } = req.user;
-  const { category, area, ingredients } = req.body;
+  const { page = 1, limit = 20, category, area, ingredients } = req.query;
   const filter = { category, area, ingredients, owner };
   const fields = '';
-  const { page = 1, limit = 20 } = req.query;
   const skip = (page - 1) * limit;
   const settings = { skip, limit };
 
@@ -92,7 +89,7 @@ const deleteRecipe = async (req, res) => {
 const getPopularRecipes = async (req, res) => {
   const { page = 1, limit = 20 } = req.query;
   const skip = (page - 1) * limit;
-  const result = await recipesServices.getPopular(skip, parseInt(limit));
+  const result = await recipesServices.getPopular(skip, limit);
   responseWrapper(result, 404, res, 200);
 };
 
