@@ -1,78 +1,28 @@
-# Foodies
+# Foodies API
 
-Final team project, backend, technology stack: Node.js
+Final team project, backend, technology stack: Node.js, Express, swagger,
+jsonwebtoken, joi, jest, supertest, mongoose.
 
-**public**
+## 🏃‍♂️ Simple start
 
-**GET .../recipes** - to get all recipes\
+1. **`npm i`** at the root
+2. **`npm run dev`** at the root
+3. open **`http://localhost:3600/`**
 
-Can take next:
+- **`npm run test`** at root run tests
+- **`npm run build`** at root build your project
 
-- body:
-  1. category -> ObjectId (StringHex)
-  2. area -> ObjectId (StringHex)
-  3. ingredients -> ObjectId (StringHex)
-- query:
-  1. page -> String
-  2. limit -> String
+## 💡 Foodies API documentation
 
-**GET .../recipes/:id** - to get recipe\
+    /doc swagger API documentation URL
 
-Take next:
+## 💡 You should create .env at the root with the next environments
 
-- params:
-
-1.  id -> ObjectId (StringHex)
-
-**GET .../popular/list** - to get list of popular recipes
-
-Can take next:
-
-- query:
-  1. page -> Number
-  2. limit -> Number
-
-**GET .../recipes/user/:id** - to get recipes of some user
-
-Take next:
-
-- params:
-
-1.  id -> ObjectId (StringHex)
-
-- query:
-  1. page -> Number
-  2. limit -> Number
-
-**private**
-
-**GET .../recipes/personal/data** - to get user`s recipes after login
-
-Can take next:
-
-- query:
-  1. page -> Number
-  2. limit -> Number
-
-**POST .../recipes/personal** - to post new user`s recipe
-
-Take next (in form-data form):
-
-- body:
-
-1. title -> String
-2. category -> ObjectId (StringHex)
-3. area -> ObjectId (StringHex)
-4. instructions -> String
-5. description -> String
-6. time -> String
-7. ingredients -> Array[ObjectId (StringHex)]
-8. thumb -> file
-
-**DELETE .../recipes/:id** - to delete user`s recipe
-
-Take next:
-
-- params:
-
-1.  id -> ObjectId (StringHex)
+1. PROD_DB_URL = "production_db_url"
+2. DEV_DB_URL = "development_db_url"
+3. TEST_DB_URL = "test_db_url"
+4. PORT = 3000
+5. SECRET_KEY = "Your_secret_for_jwt"
+6. SENDGRID_API_KEY = "your_sendgrid_api_key"
+7. RESET_PASS_FRONT_URL = "front_reset_page_url"
+8. FRONT_URL = "front_url"
