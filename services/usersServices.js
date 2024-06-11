@@ -229,7 +229,7 @@ const resetPassword = async (resetToken, password) => {
     throw HttpError(404, 'User not found');
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { resetPasswordToken: resetToken },
     {
       token: '',
