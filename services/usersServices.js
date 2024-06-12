@@ -101,65 +101,66 @@ const getFollowUserList = async (_id, listType) => {
     { $match: { _id: mongoose.Types.ObjectId.createFromHexString(_id) } },
     {
       $lookup: {
-        from: "users",
+        from: 'users',
         localField: listType,
-        foreignField: "_id",
-        as: listType
-      }
+        foreignField: '_id',
+        as: listType,
+      },
     },
     {
       $lookup: {
-        from: "recipes",
+        from: 'recipes',
         localField: listType,
-        foreignField: "owner",
-        as: "recipes"
-      }
+        foreignField: 'owner',
+        as: 'recipes',
+      },
     },
     { $unwind: `$${listType}` },
     {
       $lookup: {
-        from: "recipes",
+        from: 'recipes',
         localField: `${listType}._id`,
-        foreignField: "owner",
+        foreignField: 'owner',
         pipeline: [
           {
             $project: {
               _id: 0,
               title: 1,
-              thumb: 1
-            }
-          }
+              thumb: 1,
+            },
+          },
         ],
-        as: `${listType}.recipes`
-      }
+        as: `${listType}.recipes`,
+      },
     },
     {
       $addFields: {
         [`${listType}.recipesCount`]: { $size: `$${listType}.recipes` },
-        [`${listType}.recipes`]: { $slice: [`$${listType}.recipes`, RECIPES_NUMBER] }
-      }
+        [`${listType}.recipes`]: {
+          $slice: [`$${listType}.recipes`, RECIPES_NUMBER],
+        },
+      },
     },
     {
       $group: {
-        _id: "$_id",
+        _id: '$_id',
         [`${listType}`]: {
           $push: {
             _id: `$${listType}._id`,
             name: `$${listType}.name`,
             avatar: `$${listType}.avatar`,
             recipesCount: `$${listType}.recipesCount`,
-            recipes: `$${listType}.recipes`
-          }
+            recipes: `$${listType}.recipes`,
+          },
         },
-      }
-    }
+      },
+    },
   ];
 
   const userList = await User.aggregate(pipeline);
 
   return userList;
-
-}
+};
 
 const getFollowing = async _id => await getFollowUserList(_id, 'following');
 
@@ -229,7 +230,7 @@ const resetPassword = async (resetToken, password) => {
     throw HttpError(404, 'User not found');
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { resetPasswordToken: resetToken },
     {
       token: '',
