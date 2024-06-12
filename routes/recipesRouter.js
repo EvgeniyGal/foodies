@@ -81,10 +81,18 @@ recipesRouter.get(
   '/personal/data',
   recipesController.getOwnRecipes
   // #swagger.tags = ['Recipes']
-  // #swagger.description = 'Authenticated user route'
+  // #swagger.description = 'Authenticated recipe route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/recipesResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -100,7 +108,10 @@ recipesRouter.post(
   validateBody(recipeAddSchema),
   recipesController.addRecipe
   // #swagger.tags = ['Recipes']
-  // #swagger.description = 'Authenticated user route'
+  // #swagger.description = 'Authenticated recipe route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /*  #swagger.requestBody = {
             required: true,
             content: {
@@ -117,6 +128,11 @@ recipesRouter.post(
             schema: { $ref: '#/components/schemas/recipeResponsePost' }
         }   
     */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
+        }   
+    */
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
@@ -128,10 +144,18 @@ recipesRouter.delete(
   '/:id',
   recipesController.deleteRecipe
   // #swagger.tags = ['Recipes']
-  // #swagger.description = 'Authenticated user route'
+  // #swagger.description = 'Authenticated recipe route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/recipeResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
