@@ -18,11 +18,11 @@ const register = async (req, res) => {
   });
 
   res.status(201).json({
+    token,
     user: {
       name,
       email,
       avatar,
-      token,
     },
   });
 };
