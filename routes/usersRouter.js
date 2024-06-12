@@ -151,9 +151,17 @@ usersRouter.get(
   usersController.getFollowing
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userFollowingsResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -167,9 +175,17 @@ usersRouter.get(
   usersController.getFollowers
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userFollowersResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -183,9 +199,17 @@ usersRouter.get(
   usersController.getCurrentUser
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userCurrentResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -200,9 +224,17 @@ usersRouter.get(
   usersController.getUserProfile
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userByIdResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -217,6 +249,9 @@ usersRouter.patch(
   usersController.updateAvatar
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /*  #swagger.requestBody = {
             required: true,
             content: {
@@ -233,6 +268,11 @@ usersRouter.patch(
             schema: { $ref: '#/components/schemas/userPatchAvatarResponse' }
         }   
     */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
+        }   
+    */
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
@@ -245,9 +285,17 @@ usersRouter.patch(
   usersController.followUser
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userFollowingsResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -262,9 +310,17 @@ usersRouter.delete(
   usersController.unfollowUser
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userFollowingsResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -278,8 +334,16 @@ usersRouter.post(
   usersController.logout
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[204] = {
             description: "No Content",
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -293,9 +357,17 @@ usersRouter.get(
   usersController.getFavoriteRecipes
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userRecipesResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -310,9 +382,17 @@ usersRouter.patch(
   usersController.likeRecipe
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userRecipesResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {
@@ -327,9 +407,17 @@ usersRouter.delete(
   usersController.unlikeRecipe
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
+  /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userRecipesResponse' }
+        }   
+    */
+  /* #swagger.responses[401] = {
+            description: "Unauthorized",
+            schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
   /* #swagger.responses[404] = {

@@ -6,6 +6,15 @@ const doc = {
     title: 'Foodies API',
     description: '  ',
   },
+  securityDefinitions: {
+    bearerAuth: {
+      type: 'apiKey',
+      name: 'Authorization',
+      in: 'header',
+      description:
+        'Enter your bearer token in the format **Bearer &lt;token>**',
+    },
+  },
   servers: [
     {
       url: 'http://localhost:3000',
@@ -574,6 +583,9 @@ const doc = {
       },
       errorMessage: {
         message: 'Error message',
+      },
+      unauthorized: {
+        message: 'Unauthorized',
       },
     },
   },
