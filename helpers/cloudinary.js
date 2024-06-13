@@ -29,7 +29,26 @@ const uploadImage = async (imagePath, folder, dimensions) => {
   try {
     const result = await cloudinary.uploader.upload(imagePath, options);
     return result;
-  } catch (error) {}
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
-export default uploadImage;
+const extractPublicId = url => {
+  const parts = url.split('/');
+  const lastPart = parts.pop();
+  const [publicId] = lastPart.split('.');
+  return publicId;
+};
+
+const deleteImageByUrl = async (url, folder) => {
+  const publicId = `${folder}/${extractPublicId(url)}`;
+  try {
+    const result = await cloudinary.uploader.destroy(publicId);
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export default { uploadImage, deleteImageByUrl };

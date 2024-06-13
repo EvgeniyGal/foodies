@@ -2,7 +2,8 @@ import recipesServices from '../services/recipesServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import responseWrapper from '../decorators/responseWrapper.js';
 import HttpError from '../helpers/HttpError.js';
-import uploadImage from '../helpers/cloudinary.js';
+import cloudinary from '../helpers/cloudinary.js';
+import fs from 'fs/promises';
 
 const RECIPES_FOLDER = 'recipes';
 
@@ -57,11 +58,11 @@ const addRecipe = async (req, res) => {
   } = req.body;
 
   const { path: tmpPath } = req.file;
-  const { url } = await uploadImage(tmpPath, RECIPES_FOLDER, {
+  const { url } = await cloudinary.uploadImage(tmpPath, RECIPES_FOLDER, {
     h: 400,
     w: 550,
   });
-
+  await fs.unlink(tmpPath);
   const recipe = await recipesServices.createNewRecipe({
     title,
     category,
@@ -80,8 +81,12 @@ const deleteRecipe = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
   const filter = { recipeId: id, owner };
-  const recipe = await recipesServices.deleteRecipeById(filter);
-  responseWrapper(recipe, 404, res, 200);
+  const recipeBefore = await recipesServices.recipeById(id);
+  const { status } = await recipesServices.deleteRecipeById(filter);
+  if (status === 'Ok') {
+    await cloudinary.deleteImageByUrl(recipeBefore.thumb, RECIPES_FOLDER);
+  }
+  responseWrapper({ message: status }, 404, res, 200);
 };
 
 const getPopularRecipes = async (req, res) => {

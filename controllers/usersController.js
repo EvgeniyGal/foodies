@@ -4,7 +4,8 @@ import gravatar from 'gravatar';
 import HttpError from '../helpers/HttpError.js';
 import sgMail from '@sendgrid/mail';
 import { getResetPasswordMsg } from '../helpers/emailTemplates.js';
-import uploadImage from '../helpers/cloudinary.js';
+import cloudinary from '../helpers/cloudinary.js';
+import fs from 'fs/promises';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const USERS_FOLDER = 'users';
@@ -42,11 +43,15 @@ const updateAvatar = async (req, res) => {
   if (!req.file) {
     throw HttpError(400, 'File not found');
   }
-  const { _id } = req.user;
+  const { _id, avatar } = req.user;
   const { path: tmpPath } = req.file;
-  const { url } = await uploadImage(tmpPath, USERS_FOLDER, { h: 250, w: 250 });
+  const { url } = await cloudinary.uploadImage(tmpPath, USERS_FOLDER, {
+    h: 250,
+    w: 250,
+  });
   await usersServices.update(_id, { avatar: url });
-
+  await cloudinary.deleteImageByUrl(avatar, USERS_FOLDER);
+  await fs.unlink(tmpPath);
   res.status(200).json({
     avatar: url,
   });
