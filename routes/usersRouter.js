@@ -26,10 +26,10 @@ usersRouter.post(
                 "application/json": {
                     schema: {
                         $ref: "#/components/schemas/userRegisterBody"
-                    }  
+                    }
                 }
             }
-        } 
+        }
     */
   /* #swagger.responses[201] = {
             description: "User successfully created",
@@ -38,19 +38,19 @@ usersRouter.post(
                     schema:{
                         $ref: "#/components/schemas/userRegisterResponse"
                     }
-                }           
+                }
             }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
   /* #swagger.responses[409] = {
             description: "Email in use",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.post(
@@ -64,10 +64,10 @@ usersRouter.post(
                 "application/json": {
                     schema: {
                         $ref: "#/components/schemas/userLoginBody"
-                    }  
+                    }
                 }
             }
-        } 
+        }
     */
   /* #swagger.responses[200] = {
             description: "User successfully created",
@@ -76,19 +76,19 @@ usersRouter.post(
                     schema:{
                         $ref: "#/components/schemas/userLoginResponse"
                     }
-                }           
+                }
             }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Email or password is wrong",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.post(
@@ -102,19 +102,19 @@ usersRouter.post(
                 "application/json": {
                     schema: {
                         $ref: "#/components/schemas/userResetPassEmailBody"
-                    }  
+                    }
                 }
             }
-        } 
+        }
     */
   /* #swagger.responses[204] = {
             description: "No Content",
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.post(
@@ -128,19 +128,19 @@ usersRouter.post(
                 "application/json": {
                     schema: {
                         $ref: "#/components/schemas/userNewPassBody"
-                    }  
+                    }
                 }
             }
-        } 
+        }
     */
   /* #swagger.responses[302] = {
             description: "Redirect to login page",
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 
@@ -157,7 +157,7 @@ usersRouter.get(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userFollowingsResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -167,7 +167,7 @@ usersRouter.get(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.get(
@@ -181,7 +181,7 @@ usersRouter.get(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userFollowersResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -191,7 +191,7 @@ usersRouter.get(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.get(
@@ -205,7 +205,7 @@ usersRouter.get(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userCurrentResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -215,7 +215,7 @@ usersRouter.get(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.get(
@@ -230,7 +230,7 @@ usersRouter.get(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userByIdResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -240,7 +240,7 @@ usersRouter.get(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.patch(
@@ -258,15 +258,15 @@ usersRouter.patch(
                 "application/json": {
                     schema: {
                         $ref: "#/components/schemas/userPatchAvatarBody"
-                    }  
+                    }
                 }
             }
-        } 
+        }
     */
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userPatchAvatarResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -276,7 +276,7 @@ usersRouter.patch(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.patch(
@@ -291,7 +291,7 @@ usersRouter.patch(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userFollowingsResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -301,7 +301,7 @@ usersRouter.patch(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.delete(
@@ -316,7 +316,7 @@ usersRouter.delete(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userFollowingsResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -326,7 +326,7 @@ usersRouter.delete(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.post(
@@ -339,7 +339,7 @@ usersRouter.post(
     }] */
   /* #swagger.responses[204] = {
             description: "No Content",
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -349,7 +349,7 @@ usersRouter.post(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.get(
@@ -363,7 +363,7 @@ usersRouter.get(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userRecipesResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -373,7 +373,7 @@ usersRouter.get(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.patch(
@@ -388,7 +388,7 @@ usersRouter.patch(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userRecipesResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -398,7 +398,7 @@ usersRouter.patch(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 usersRouter.delete(
@@ -413,7 +413,7 @@ usersRouter.delete(
   /* #swagger.responses[200] = {
             description: "OK",
             schema: { $ref: '#/components/schemas/userRecipesResponse' }
-        }   
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
@@ -423,7 +423,7 @@ usersRouter.delete(
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+        }
     */
 );
 
