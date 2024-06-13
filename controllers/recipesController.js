@@ -1,12 +1,10 @@
 import recipesServices from '../services/recipesServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import responseWrapper from '../decorators/responseWrapper.js';
-import resizer from '../helpers/resizer.js';
-import fs from 'fs/promises';
-import path from 'path';
 import HttpError from '../helpers/HttpError.js';
+import uploadImage from '../helpers/cloudinary.js';
 
-const recipePath = path.resolve('public', 'recipes');
+const RECIPES_FOLDER = 'recipes';
 
 const getRecipesByFilter = async (req, res) => {
   const { page = 1, limit = 20, category, area, ingredients } = req.query;
@@ -46,7 +44,7 @@ const getOwnRecipes = async (req, res) => {
 const addRecipe = async (req, res) => {
   const { _id: owner } = req.user;
   if (!req.file) {
-    throw HttpError(401, 'File not found');
+    throw HttpError(400, 'File not found');
   }
   const {
     title,
@@ -58,11 +56,11 @@ const addRecipe = async (req, res) => {
     ingredients,
   } = req.body;
 
-  const { path: tmpPath, filename } = req.file;
-  await resizer(tmpPath, { h: 400, w: 550 });
-  const newPath = path.join(recipePath, filename);
-  await fs.rename(tmpPath, newPath);
-  const recipeURL = path.join('recipes', filename);
+  const { path: tmpPath } = req.file;
+  const { url } = await uploadImage(tmpPath, RECIPES_FOLDER, {
+    h: 400,
+    w: 550,
+  });
 
   const recipe = await recipesServices.createNewRecipe({
     title,
@@ -70,12 +68,12 @@ const addRecipe = async (req, res) => {
     area,
     instructions,
     description,
-    thumb: recipeURL,
+    thumb: url,
     time,
     ingredients,
     owner,
   });
-  responseWrapper(recipe, 404, res, 201);
+  responseWrapper(recipe, 400, res, 201);
 };
 
 const deleteRecipe = async (req, res) => {

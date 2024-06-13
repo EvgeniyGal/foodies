@@ -19,7 +19,7 @@ recipesRouter.get(
         }   
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
+            description: "Not found",
             schema: { $ref: '#/components/schemas/errorMessage' }
         }   
     */
@@ -35,7 +35,7 @@ recipesRouter.get(
         }   
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
+            description: "Not found",
             schema: { $ref: '#/components/schemas/errorMessage' }
         }   
     */
@@ -51,7 +51,7 @@ recipesRouter.get(
         }   
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
+            description: "Not found",
             schema: { $ref: '#/components/schemas/errorMessage' }
         }   
     */
@@ -67,7 +67,7 @@ recipesRouter.get(
         }   
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
+            description: "Not found",
             schema: { $ref: '#/components/schemas/errorMessage' }
         }   
     */
@@ -96,7 +96,7 @@ recipesRouter.get(
         }   
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
+            description: "Not found",
             schema: { $ref: '#/components/schemas/errorMessage' }
         }   
     */
@@ -133,7 +133,7 @@ recipesRouter.post(
             schema: { $ref: '#/components/schemas/unauthorized' }
         }   
     */
-  /* #swagger.responses[404] = {
+  /* #swagger.responses[400] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessage' }
         }   
@@ -159,7 +159,7 @@ recipesRouter.delete(
         }   
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
+            description: "Not found",
             schema: { $ref: '#/components/schemas/errorMessage' }
         }   
     */
