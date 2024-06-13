@@ -81,7 +81,7 @@ const addRecipe = async (req, res) => {
 const deleteRecipe = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
-  const filter = { _id: id, owner };
+  const filter = { recipeId: id, owner };
   const recipe = await recipesServices.deleteRecipeById(filter);
   responseWrapper(recipe, 404, res, 200);
 };

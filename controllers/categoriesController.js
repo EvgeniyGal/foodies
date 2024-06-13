@@ -1,5 +1,6 @@
-import { getCategories } from '../services/categoriesServices.js';
+import categoriesServices from '../services/categoriesServices.js';
 
 export const getAllCategories = async (_, res) => {
-  res.json(await getCategories());
+  const categories = await categoriesServices.getCategories();
+  res.json(categories);
 };

@@ -1,6 +1,7 @@
+import HttpError from '../helpers/HttpError.js';
 import Recipe from '../models/Recipe.js';
 import User from '../models/User.js';
-import { Types, set } from 'mongoose';
+import mongoose from 'mongoose';
 
 const listRecipes = async (filter, fields, settings) => {
   const { category, area, ingredients, owner } = filter;
@@ -13,7 +14,7 @@ const listRecipes = async (filter, fields, settings) => {
   }
   if (ingredients) {
     validateFilter['ingredients.id'] = {
-      $in: [Types.ObjectId.createFromHexString(ingredients)],
+      $in: [mongoose.Types.ObjectId.createFromHexString(ingredients)],
     };
   }
   if (owner) {
@@ -49,9 +50,38 @@ const createNewRecipe = async recipe => {
   return resp ? resp : null;
 };
 
-const deleteRecipeById = async filter => {
-  const resp = await Recipe.findOneAndDelete(filter);
-  return resp ? resp : null;
+const deleteRecipeById = async ({ recipeId, owner }) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const { deletedCount } = await Recipe.deleteOne(
+      { _id: recipeId, owner },
+      { session }
+    );
+
+    if (!deletedCount) {
+      throw HttpError(404, 'Recipe not found');
+    }
+
+    const result = await User.updateMany(
+      { favRecipes: recipeId },
+      {
+        $pull: {
+          favRecipes: recipeId,
+        },
+      },
+      { session }
+    );
+
+    await session.commitTransaction();
+    return { status: 'Ok' };
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
 };
 
 const getPopular = async (skip, limit) => {
