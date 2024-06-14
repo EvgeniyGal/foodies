@@ -1,12 +1,11 @@
 import recipesServices from '../services/recipesServices.js';
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import responseWrapper from '../decorators/responseWrapper.js';
-import resizer from '../helpers/resizer.js';
-import fs from 'fs/promises';
-import path from 'path';
 import HttpError from '../helpers/HttpError.js';
+import cloudinary from '../helpers/cloudinary.js';
+import fs from 'fs/promises';
 
-const recipePath = path.resolve('public', 'recipes');
+const RECIPES_FOLDER = 'recipes';
 
 const getRecipesByFilter = async (req, res) => {
   const { page = 1, limit = 20, category, area, ingredients } = req.query;
@@ -46,7 +45,7 @@ const getOwnRecipes = async (req, res) => {
 const addRecipe = async (req, res) => {
   const { _id: owner } = req.user;
   if (!req.file) {
-    throw HttpError(401, 'File not found');
+    throw HttpError(400, 'File not found');
   }
   const {
     title,
@@ -58,32 +57,36 @@ const addRecipe = async (req, res) => {
     ingredients,
   } = req.body;
 
-  const { path: tmpPath, filename } = req.file;
-  await resizer(tmpPath, { h: 400, w: 550 });
-  const newPath = path.join(recipePath, filename);
-  await fs.rename(tmpPath, newPath);
-  const recipeURL = path.join('recipes', filename);
-
+  const { path: tmpPath } = req.file;
+  const { url } = await cloudinary.uploadImage(tmpPath, RECIPES_FOLDER, {
+    h: 400,
+    w: 550,
+  });
+  await fs.unlink(tmpPath);
   const recipe = await recipesServices.createNewRecipe({
     title,
     category,
     area,
     instructions,
     description,
-    thumb: recipeURL,
+    thumb: url,
     time,
     ingredients,
     owner,
   });
-  responseWrapper(recipe, 404, res, 201);
+  responseWrapper(recipe, 400, res, 201);
 };
 
 const deleteRecipe = async (req, res) => {
   const { _id: owner } = req.user;
   const { id } = req.params;
   const filter = { recipeId: id, owner };
-  const recipe = await recipesServices.deleteRecipeById(filter);
-  responseWrapper(recipe, 404, res, 200);
+  const recipeBefore = await recipesServices.recipeById(id);
+  const { status } = await recipesServices.deleteRecipeById(filter);
+  if (status === 'Ok') {
+    await cloudinary.deleteImageByUrl(recipeBefore.thumb, RECIPES_FOLDER);
+  }
+  responseWrapper({ message: status }, 404, res, 200);
 };
 
 const getPopularRecipes = async (req, res) => {
