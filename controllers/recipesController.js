@@ -8,8 +8,15 @@ import fs from 'fs/promises';
 const RECIPES_FOLDER = 'recipes';
 
 const getRecipesByFilter = async (req, res) => {
-  const { page = 1, limit = 20, category, area, ingredients } = req.query;
-  const filter = { category, area, ingredients };
+  const {
+    page = 1,
+    limit = 20,
+    category,
+    area,
+    ingredients,
+    userId,
+  } = req.query;
+  const filter = { category, area, ingredients, userId };
   const fields = '';
   const skip = (page - 1) * limit;
   const settings = { skip, limit };
@@ -22,14 +29,15 @@ const getRecipesByFilter = async (req, res) => {
 };
 const getRecipeById = async (req, res) => {
   const { id } = req.params;
-  const recipe = await recipesServices.recipeById(id);
+  const { userId } = req.query;
+  const recipe = await recipesServices.recipeById(id, userId);
   responseWrapper(recipe, 404, res, 200);
 };
 
 const getOwnRecipes = async (req, res) => {
   const { _id: owner } = req.user;
   const { page = 1, limit = 20, category, area, ingredients } = req.query;
-  const filter = { category, area, ingredients, owner };
+  const filter = { category, area, ingredients, owner, userId: owner };
   const fields = '';
   const skip = (page - 1) * limit;
   const settings = { skip, limit };
