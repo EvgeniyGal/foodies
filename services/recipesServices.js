@@ -3,14 +3,15 @@ import Recipe from '../models/Recipe.js';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
 
-const listRecipes = async (filter, fields, settings) => {
-  const { category, area, ingredients, owner } = filter;
+const listRecipes = async (filter, _, settings) => {
+  const { category, area, ingredients, owner, userId = null } = filter;
   let validateFilter = {};
   if (category) {
-    validateFilter['category'] = category;
+    validateFilter['category'] =
+      mongoose.Types.ObjectId.createFromHexString(category);
   }
   if (area) {
-    validateFilter['area'] = area;
+    validateFilter['area'] = mongoose.Types.ObjectId.createFromHexString(area);
   }
   if (ingredients) {
     validateFilter['ingredients.id'] = {
@@ -18,7 +19,8 @@ const listRecipes = async (filter, fields, settings) => {
     };
   }
   if (owner) {
-    validateFilter['owner'] = owner;
+    validateFilter['owner'] =
+      mongoose.Types.ObjectId.createFromHexString(owner);
   }
 
   const total = await Recipe.countDocuments(validateFilter);
@@ -26,23 +28,321 @@ const listRecipes = async (filter, fields, settings) => {
     return null;
   }
 
-  const resp = await Recipe.find(validateFilter, fields, settings).populate([
-    { path: 'owner', select: 'name avatar' },
-    { path: 'category', select: 'name' },
-    { path: 'area', select: 'name' },
-    { path: 'ingredients.id', select: 'name img' },
-  ]);
+  const pipeline = [
+    { $match: validateFilter },
+    { $skip: settings.skip },
+    { $limit: parseInt(settings.limit) },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'owner',
+        foreignField: '_id',
+        as: 'owner',
+        pipeline: [{ $project: { name: 1, avatar: 1 } }],
+      },
+    },
+    { $unwind: '$owner' },
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'category',
+        foreignField: '_id',
+        as: 'category',
+        pipeline: [{ $project: { name: 1 } }],
+      },
+    },
+    { $unwind: '$category' },
+    {
+      $lookup: {
+        from: 'areas',
+        localField: 'area',
+        foreignField: '_id',
+        as: 'area',
+        pipeline: [{ $project: { name: 1 } }],
+      },
+    },
+    { $unwind: '$area' },
+    {
+      $lookup: {
+        from: 'ingredients',
+        localField: 'ingredients.ingredient',
+        foreignField: '_id',
+        as: 'ingredientsData',
+      },
+    },
+    {
+      $addFields: {
+        ingredients: {
+          $map: {
+            input: '$ingredients',
+            as: 'ing',
+            in: {
+              ingredient: {
+                $arrayElemAt: [
+                  '$ingredientsData',
+                  {
+                    $indexOfArray: ['$ingredientsData._id', '$$ing.ingredient'],
+                  },
+                ],
+              },
+              measure: '$$ing.measure',
+            },
+          },
+        },
+      },
+    },
+  ];
+
+  if (userId) {
+    pipeline.push(
+      {
+        $lookup: {
+          from: 'users',
+          let: {
+            recipeId: '$_id',
+            userId: mongoose.Types.ObjectId.createFromHexString(userId),
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$_id', '$$userId'] },
+                    { $in: ['$$recipeId', '$favRecipes'] },
+                  ],
+                },
+              },
+            },
+            { $count: 'isFavorite' },
+          ],
+          as: 'userFavorite',
+        },
+      },
+      {
+        $addFields: {
+          isFavorite: {
+            $cond: {
+              if: { $gt: [{ $size: '$userFavorite' }, 0] },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          owner: 1,
+          area: 1,
+          instructions: 1,
+          description: 1,
+          thumb: 1,
+          time: 1,
+          ingredients: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          isFavorite: 1,
+        },
+      }
+    );
+  } else {
+    pipeline.push(
+      {
+        $addFields: {
+          isFavorite: false,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          owner: 1,
+          area: 1,
+          instructions: 1,
+          description: 1,
+          thumb: 1,
+          time: 1,
+          ingredients: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          isFavorite: 1,
+        },
+      }
+    );
+  }
+
+  const resp = await Recipe.aggregate(pipeline);
+
   return resp ? { total, recipes: resp } : null;
 };
 
-const recipeById = async id => {
-  const resp = await Recipe.findById(id).populate([
-    { path: 'owner', select: 'name avatar' },
-    { path: 'category', select: 'name' },
-    { path: 'area', select: 'name' },
-    { path: 'ingredients.id', select: 'name img' },
-  ]);
-  return resp ? resp : null;
+const recipeById = async (id, userId) => {
+  const pipeline = [
+    { $match: { _id: mongoose.Types.ObjectId.createFromHexString(id) } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'owner',
+        foreignField: '_id',
+        as: 'owner',
+        pipeline: [{ $project: { name: 1, avatar: 1 } }],
+      },
+    },
+    { $unwind: '$owner' },
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'category',
+        foreignField: '_id',
+        as: 'category',
+        pipeline: [{ $project: { name: 1 } }],
+      },
+    },
+    { $unwind: '$category' },
+    {
+      $lookup: {
+        from: 'areas',
+        localField: 'area',
+        foreignField: '_id',
+        as: 'area',
+        pipeline: [{ $project: { name: 1 } }],
+      },
+    },
+    { $unwind: '$area' },
+    {
+      $lookup: {
+        from: 'ingredients',
+        localField: 'ingredients.ingredient',
+        foreignField: '_id',
+        as: 'ingredientsData',
+      },
+    },
+    {
+      $addFields: {
+        ingredients: {
+          $map: {
+            input: '$ingredients',
+            as: 'ing',
+            in: {
+              ingredient: {
+                $arrayElemAt: [
+                  '$ingredientsData',
+                  {
+                    $indexOfArray: ['$ingredientsData._id', '$$ing.ingredient'],
+                  },
+                ],
+              },
+              measure: '$$ing.measure',
+            },
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        category: 1,
+        owner: 1,
+        area: 1,
+        instructions: 1,
+        description: 1,
+        thumb: 1,
+        time: 1,
+        ingredients: 1,
+        isFavorite: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+  ];
+
+  if (userId) {
+    pipeline.push(
+      {
+        $lookup: {
+          from: 'users',
+          let: {
+            recipeId: '$_id',
+            userId: mongoose.Types.ObjectId.createFromHexString(userId),
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$_id', '$$userId'] },
+                    { $in: ['$$recipeId', '$favRecipes'] },
+                  ],
+                },
+              },
+            },
+            { $count: 'isFavorite' },
+          ],
+          as: 'userFavorite',
+        },
+      },
+      {
+        $addFields: {
+          isFavorite: {
+            $cond: {
+              if: { $gt: [{ $size: '$userFavorite' }, 0] },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          owner: 1,
+          area: 1,
+          instructions: 1,
+          description: 1,
+          thumb: 1,
+          time: 1,
+          ingredients: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          isFavorite: 1,
+        },
+      }
+    );
+  } else {
+    pipeline.push(
+      {
+        $addFields: {
+          isFavorite: false,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          owner: 1,
+          area: 1,
+          instructions: 1,
+          description: 1,
+          thumb: 1,
+          time: 1,
+          ingredients: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          isFavorite: 1,
+        },
+      }
+    );
+  }
+
+  const resp = await Recipe.aggregate(pipeline);
+  return resp.length > 0 ? resp[0] : null;
 };
 
 const createNewRecipe = async recipe => {
