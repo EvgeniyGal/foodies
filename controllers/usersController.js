@@ -1,16 +1,14 @@
-import fsPromises from 'fs/promises';
-import path from 'path';
-
 import ctrlWrapper from '../decorators/ctrlWrapper.js';
 import usersServices from '../services/usersServices.js';
 import gravatar from 'gravatar';
 import HttpError from '../helpers/HttpError.js';
-import Jimp from 'jimp';
 import sgMail from '@sendgrid/mail';
 import { getResetPasswordMsg } from '../helpers/emailTemplates.js';
+import cloudinary from '../helpers/cloudinary.js';
+import fs from 'fs/promises';
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
+const USERS_FOLDER = 'users';
 const register = async (req, res) => {
   const { name, email, avatar, token } = await usersServices.register({
     ...req.body,
@@ -43,25 +41,20 @@ const login = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   if (!req.file) {
-    throw HttpError(400, 'No file attached');
+    throw HttpError(400, 'File not found');
   }
-  const { _id } = req.user;
-  const { path: tmpPath, filename } = req.file;
-  const avatarsDir = path.resolve('public', 'avatars');
-  await resizeAvatar(tmpPath);
-  const avatarPath = path.join(avatarsDir, filename);
-  await fsPromises.rename(tmpPath, avatarPath);
-  const avatarURL = path.join('avatars', filename);
-  await usersServices.update(_id, { avatar: avatarURL });
-
-  res.status(200).json({
-    avatar: avatarURL,
+  const { _id, avatar } = req.user;
+  const { path: tmpPath } = req.file;
+  const { url } = await cloudinary.uploadImage(tmpPath, USERS_FOLDER, {
+    h: 250,
+    w: 250,
   });
-};
-
-const resizeAvatar = async avatarPath => {
-  const avatar = await Jimp.read(avatarPath);
-  await avatar.resize(250, 250).writeAsync(avatarPath);
+  await usersServices.update(_id, { avatar: url });
+  await cloudinary.deleteImageByUrl(avatar, USERS_FOLDER);
+  await fs.unlink(tmpPath);
+  res.status(200).json({
+    avatar: url,
+  });
 };
 
 const followUser = async (req, res) => {
