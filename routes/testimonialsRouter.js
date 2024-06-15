@@ -9,12 +9,12 @@ testimonialsRouter.get(
   // #swagger.tags = ['Testimonials']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/testimonialsResponse' }
+            schema: { $ref: '#/components/schemas/testimonialsRes' }
         }   
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
         }   
     */
 );

@@ -9,12 +9,12 @@ ingredientsRouter.get(
   // #swagger.tags = ['Ingredients']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/ingredientsResponse' }
+            schema: { $ref: '#/components/schemas/ingredientsRes' }
         }   
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
         }   
     */
 );

@@ -9,12 +9,12 @@ areasRouter.get(
   // #swagger.tags = ['Areas']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/areasResponse' }
+            schema: { $ref: '#/components/schemas/areasRes' }
         }   
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
         }   
     */
 );
