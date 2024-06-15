@@ -98,9 +98,9 @@ const deleteRecipe = async (req, res) => {
 };
 
 const getPopularRecipes = async (req, res) => {
-  const { page = 1, limit = 20 } = req.query;
+  const { page = 1, limit = 20, userId } = req.query;
   const skip = (page - 1) * limit;
-  const result = await recipesServices.getPopular(skip, limit);
+  const result = await recipesServices.getPopular({ skip, limit, userId });
   responseWrapper(result, 404, res, 200);
 };
 
