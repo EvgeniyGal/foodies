@@ -172,11 +172,64 @@ const likeRecipe = async (_id, recipeId) =>
 const unlikeRecipe = async (_id, recipeId) =>
   await User.findByIdAndUpdate(_id, { $pull: { favRecipes: recipeId } });
 
-const getFavoriteRecipes = async _id =>
-  await User.findOne({ _id }, 'favRecipes').populate(
-    'favRecipes',
-    recipeProjection
-  );
+const getFavoriteRecipes = async (id, skip = 0, limit = 5) => {
+  const pipeline = [
+    {
+      $match: {
+        _id: mongoose.Types.ObjectId.createFromHexString(id),
+      },
+    },
+    {
+      $addFields: {
+        favRecipes: { $ifNull: ['$favRecipes', []] },
+      },
+    },
+    {
+      $addFields: {
+        total: {
+          $size: '$favRecipes',
+        },
+        favRecipes: {
+          $slice: ['$favRecipes', skip, limit],
+        },
+      },
+    },
+    {
+      $addFields: {
+        quantity: {
+          $size: '$favRecipes',
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'recipes',
+        localField: 'favRecipes',
+        foreignField: '_id',
+        pipeline: [
+          {
+            $project: {
+              title: 1,
+              instructions: 1,
+              thumb: 1,
+            },
+          },
+        ],
+        as: 'recipes',
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        total: 1,
+        quantity: 1,
+        recipes: 1,
+      },
+    },
+  ];
+  const result = await User.aggregate(pipeline);
+  return result;
+};
 
 const getUserInfo = async id => {
   const [result] = await User.aggregate([

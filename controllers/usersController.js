@@ -120,9 +120,16 @@ const unlikeRecipe = async (req, res) => {
 
 const getFavoriteRecipes = async (req, res) => {
   const { id } = req.user;
-  const { favRecipes } = await usersServices.getFavoriteRecipes(id);
+  const { page = 1, limit = 5 } = req.query;
+  const skip = (page - 1) * limit;
 
-  res.status(200).json(favRecipes);
+  const [result] = await usersServices.getFavoriteRecipes(
+    id,
+    Number.parseInt(skip),
+    Number.parseInt(limit)
+  );
+
+  res.status(200).json(result);
 };
 
 const getUserProfile = async (req, res) => {
