@@ -3,6 +3,7 @@ import Recipe from '../models/Recipe.js';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
 
+const zeroResp = { message: 'No recipes found', total: 0, recipes: [] };
 const listRecipes = async (filter, _, settings) => {
   const { category, area, ingredients, owner, userId = null } = filter;
   let validateFilter = {};
@@ -24,8 +25,10 @@ const listRecipes = async (filter, _, settings) => {
   }
 
   const total = await Recipe.countDocuments(validateFilter);
-  if (total === 0 || total <= settings.skip) {
-    return null;
+  if (total === 0) {
+    return zeroResp;
+  } else if (total <= settings.skip) {
+    zeroResp.total = total;
   }
 
   const pipeline = [
@@ -176,7 +179,7 @@ const listRecipes = async (filter, _, settings) => {
 
   const resp = await Recipe.aggregate(pipeline);
 
-  return resp ? { total, recipes: resp } : null;
+  return resp ? { total, recipes: resp } : zeroResp;
 };
 
 const recipeById = async (id, userId) => {
@@ -384,7 +387,7 @@ const deleteRecipeById = async ({ recipeId, owner }) => {
   }
 };
 
-const getPopular = async (skip, limit) => {
+const getPopular = async ({ skip, limit, userId }) => {
   const totalResults = await User.aggregate([
     { $unwind: '$favRecipes' },
     { $group: { _id: '$favRecipes', count: { $sum: 1 } } },
@@ -393,11 +396,13 @@ const getPopular = async (skip, limit) => {
 
   const total = totalResults.length > 0 ? totalResults[0].total : 0;
 
-  if (total === 0 || total <= skip) {
-    return null;
+  if (total === 0) {
+    return zeroResp;
+  } else if (total < limit) {
+    zeroResp.total = total;
   }
 
-  const resp = await User.aggregate([
+  const pipeline = [
     { $unwind: '$favRecipes' },
     { $group: { _id: '$favRecipes', count: { $sum: 1 } } },
     { $sort: { count: -1 } },
@@ -435,9 +440,92 @@ const getPopular = async (skip, limit) => {
         count: 1,
       },
     },
-  ]);
+  ];
 
-  return resp ? { total, resipes: resp } : null;
+  if (userId) {
+    pipeline.push(
+      {
+        $lookup: {
+          from: 'users',
+          let: {
+            recipeId: '$_id',
+            userId: mongoose.Types.ObjectId.createFromHexString(userId),
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ['$_id', '$$userId'] },
+                    { $in: ['$$recipeId', '$favRecipes'] },
+                  ],
+                },
+              },
+            },
+            { $count: 'isFavorite' },
+          ],
+          as: 'userFavorite',
+        },
+      },
+      {
+        $addFields: {
+          isFavorite: {
+            $cond: {
+              if: { $gt: [{ $size: '$userFavorite' }, 0] },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          owner: 1,
+          area: 1,
+          instructions: 1,
+          description: 1,
+          thumb: 1,
+          time: 1,
+          ingredients: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          isFavorite: 1,
+        },
+      }
+    );
+  } else {
+    pipeline.push(
+      {
+        $addFields: {
+          isFavorite: false,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          owner: 1,
+          area: 1,
+          instructions: 1,
+          description: 1,
+          thumb: 1,
+          time: 1,
+          ingredients: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          isFavorite: 1,
+        },
+      }
+    );
+  }
+
+  const resp = await User.aggregate(pipeline);
+
+  return resp ? { total, resipes: resp } : zeroResp;
 };
 
 export default {
