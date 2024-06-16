@@ -15,7 +15,7 @@ const listRecipes = async (filter, _, settings) => {
     validateFilter['area'] = mongoose.Types.ObjectId.createFromHexString(area);
   }
   if (ingredients) {
-    validateFilter['ingredients.id'] = {
+    validateFilter['ingredients.ingredient'] = {
       $in: [mongoose.Types.ObjectId.createFromHexString(ingredients)],
     };
   }
