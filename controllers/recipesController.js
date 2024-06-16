@@ -35,9 +35,11 @@ const getRecipeById = async (req, res) => {
 };
 
 const getOwnRecipes = async (req, res) => {
-  const { _id: owner } = req.user;
+  const { _id } = req.user;
+  const owner = _id.toString();
   const { page = 1, limit = 20, category, area, ingredients } = req.query;
   const filter = { category, area, ingredients, owner, userId: owner };
+
   const fields = '';
   const skip = (page - 1) * limit;
   const settings = { skip, limit };

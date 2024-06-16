@@ -26,3 +26,5 @@ jsonwebtoken, joi, jest, supertest, mongoose.
 6. SENDGRID_API_KEY = "your_sendgrid_api_key"
 7. RESET_PASS_FRONT_URL = "front_reset_page_url"
 8. FRONT_URL = "front_url"
+9. API_KEY = "Cloudy_api_key"
+10. API_SECRET = "Cloudy_api_secret"
