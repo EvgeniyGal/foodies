@@ -133,7 +133,7 @@ recipesRouter.post(
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
         }
     */
-  /* #swagger.responses[404] = {
+  /* #swagger.responses[400] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessageRes' }
         }
