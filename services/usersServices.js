@@ -231,9 +231,11 @@ const getFavoriteRecipes = async (id, skip = 0, limit = 5) => {
   return result;
 };
 
-const getUserInfo = async id => {
+const getUserInfo = async (id, currentId) => {
+  const userId = mongoose.Types.ObjectId.createFromHexString(id);
+  const currentUserId = mongoose.Types.ObjectId.createFromHexString(currentId);
   const [result] = await User.aggregate([
-    { $match: { _id: mongoose.Types.ObjectId.createFromHexString(id) } },
+    { $match: { _id: userId } },
     {
       $addFields: {
         favRecipes: { $ifNull: ['$favRecipes', []] },
@@ -248,6 +250,21 @@ const getUserInfo = async id => {
       },
     },
     {
+      $lookup: {
+        from: 'users',
+        localField: 'followers',
+        foreignField: '_id',
+        as: 'followersDetails',
+      },
+    },
+    {
+      $addFields: {
+        isFollowing: {
+          $in: [currentUserId, '$followers'],
+        },
+      },
+    },
+    {
       $project: {
         name: 1,
         email: 1,
@@ -256,13 +273,11 @@ const getUserInfo = async id => {
         followingQty: { $size: '$following' },
         favRecipesQty: { $size: '$favRecipes' },
         recipesQty: { $size: '$recipes' },
+        followersDetails: 1,
+        isFollowing: 1,
       },
     },
   ]);
-
-  if (!result) {
-    throw HttpError(401, 'User not found');
-  }
 
   return result;
 };

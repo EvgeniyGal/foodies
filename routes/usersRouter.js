@@ -171,7 +171,7 @@ usersRouter.get(
     */
 );
 usersRouter.get(
-  '/followers',
+  '/followers/:id',
   usersController.getFollowers
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'

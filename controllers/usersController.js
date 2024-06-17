@@ -81,7 +81,7 @@ const getFollowing = async (req, res) => {
 };
 
 const getFollowers = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.params;
   const [result] = await usersServices.getFollowers(id);
 
   res.status(200).json(result?.followers || []);
@@ -133,15 +133,15 @@ const getFavoriteRecipes = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const { id } = req.user;
+  const { id: currentUserId } = req.user;
   const { id: userId } = req.params;
-  const userProfile = await usersServices.getUserInfo(userId);
+  const userProfile = await usersServices.getUserInfo(userId, currentUserId);
 
-  if (id !== userId) {
-    //Other user data
-    delete userProfile.followingQty;
-    delete userProfile.favRecipesQty;
-  }
+  // if (id !== userId) {
+  //   //Other user data
+  //   delete userProfile.followingQty;
+  //   delete userProfile.favRecipesQty;
+  // }
 
   res.status(200).json(userProfile);
 };
