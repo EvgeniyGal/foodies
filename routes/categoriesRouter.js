@@ -9,14 +9,13 @@ categoriesRouter.get(
   // #swagger.tags = ['Categories']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/      categoriesRes: [
-' }
-        }   
+            schema: { $ref: '#/components/schemas/categoriesRes' }
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
             schema: { $ref: '#/components/schemas/errorMessageRes' }
-        }   
+        }
     */
 );
 

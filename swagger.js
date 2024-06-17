@@ -59,28 +59,24 @@ const doc = {
       userResetPasswordNewReq: {
         $password: 'userPassword',
       },
-      userFollowingsRes: {
-        followings: [
-          {
-            _id: '6462a6cd4c3d0ddd28897f8e',
-            name: 'Ivan',
-            avatar: 'avatar url',
-            recipesCount: 20,
-            recipes: [{ title: 'title', thumb: 'thumb' }],
-          },
-        ],
-      },
-      userFollowersRes: {
-        followers: [
-          {
-            _id: '6462a6cd4c3d0ddd28897f8e',
-            name: 'Ivan',
-            avatar: 'avatar url',
-            recipesCount: 20,
-            recipes: [{ title: 'title', thumb: 'thumb' }],
-          },
-        ],
-      },
+      userFollowingsRes: [
+        {
+          _id: '6462a6cd4c3d0ddd28897f8e',
+          name: 'Ivan',
+          avatar: 'avatar url',
+          recipesCount: 20,
+          recipes: [{ title: 'title', thumb: 'thumb' }],
+        },
+      ],
+      userFollowersRes: [
+        {
+          _id: '6462a6cd4c3d0ddd28897f8e',
+          name: 'Ivan',
+          avatar: 'avatar url',
+          recipesCount: 20,
+          recipes: [{ title: 'title', thumb: 'thumb' }],
+        },
+      ],
       userCurrentRes: {
         _id: '6663f426eb7d2d69e77f78c7',
         name: 'Evgeniy',

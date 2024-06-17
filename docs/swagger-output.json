@@ -960,12 +960,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ categoriesRes: [  "
+                  "$ref": "#/components/schemas/categoriesRes"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/ categoriesRes: [  "
+                  "$ref": "#/components/schemas/categoriesRes"
                 }
               }
             }
@@ -1269,12 +1269,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipeResponse"
+                  "$ref": "#/components/schemas/recipeRes"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipeResponse"
+                  "$ref": "#/components/schemas/recipeRes"
                 }
               }
             }
@@ -1333,6 +1333,13 @@
           },
           {
             "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1409,12 +1416,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipeResponse"
+                  "$ref": "#/components/schemas/recipeRes"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipeResponse"
+                  "$ref": "#/components/schemas/recipeRes"
                 }
               }
             }
@@ -1486,12 +1493,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipesResponse"
+                  "$ref": "#/components/schemas/recipesRes"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipesResponse"
+                  "$ref": "#/components/schemas/recipesRes"
                 }
               }
             }
