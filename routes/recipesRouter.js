@@ -15,13 +15,13 @@ recipesRouter.get(
   // #swagger.tags = ['Recipes']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/recipesResponse' }
-        }   
+            schema: { $ref: '#/components/schemas/recipesRes' }
+        }
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+            description: "Not found",
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
+        }
     */
 );
 
@@ -31,13 +31,13 @@ recipesRouter.get(
   // #swagger.tags = ['Recipes']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/recipeResponse' }
-        }   
+            schema: { $ref: '#/components/schemas/recipeRes' }
+        }
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+            description: "Not found",
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
+        }
     */
 );
 
@@ -47,13 +47,13 @@ recipesRouter.get(
   // #swagger.tags = ['Recipes']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/popularRecipes' }
-        }   
+            schema: { $ref: '#/components/schemas/recipePopularRes' }
+        }
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+            description: "Not found",
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
+        }
     */
 );
 
@@ -63,13 +63,13 @@ recipesRouter.get(
   // #swagger.tags = ['Recipes']
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/recipeResponse' }
-        }   
+            schema: { $ref: '#/components/schemas/recipeRes' }
+        }
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+            description: "Not found",
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
+        }
     */
 );
 
@@ -87,18 +87,18 @@ recipesRouter.get(
     }] */
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/recipesResponse' }
-        }   
+            schema: { $ref: '#/components/schemas/recipesRes' }
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
-            schema: { $ref: '#/components/schemas/unauthorized' }
-        }   
+            schema: { $ref: '#/components/schemas/unauthorizedRes' }
+        }
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+            description: "Not found",
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
+        }
     */
 );
 
@@ -117,26 +117,26 @@ recipesRouter.post(
             content: {
                 "application/json": {
                     schema: {
-                        $ref: "#/components/schemas/recipeBody"
-                    }  
+                        $ref: "#/components/schemas/recipeReq"
+                    }
                 }
             }
-        } 
+        }
     */
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/recipeResponsePost' }
-        }   
+            schema: { $ref: '#/components/schemas/recipeRes' }
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
-            schema: { $ref: '#/components/schemas/unauthorized' }
-        }   
+            schema: { $ref: '#/components/schemas/unauthorizedRes' }
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
+        }
     */
 );
 
@@ -150,18 +150,18 @@ recipesRouter.delete(
     }] */
   /* #swagger.responses[200] = {
             description: "OK",
-            schema: { $ref: '#/components/schemas/recipeResponse' }
-        }   
+            schema: { $ref: '#/components/schemas/recipeRes' }
+        }
     */
   /* #swagger.responses[401] = {
             description: "Unauthorized",
-            schema: { $ref: '#/components/schemas/unauthorized' }
-        }   
+            schema: { $ref: '#/components/schemas/unauthorizedRes' }
+        }
     */
   /* #swagger.responses[404] = {
-            description: "Bad request",
-            schema: { $ref: '#/components/schemas/errorMessage' }
-        }   
+            description: "Not found",
+            schema: { $ref: '#/components/schemas/errorMessageRes' }
+        }
     */
 );
 

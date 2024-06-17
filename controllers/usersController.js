@@ -84,14 +84,14 @@ const getFollowing = async (req, res) => {
   const { id } = req.user;
   const [result] = await usersServices.getFollowing(id);
 
-  res.status(200).json({ following: result?.following || [] });
+  res.status(200).json(result?.following || []);
 };
 
 const getFollowers = async (req, res) => {
   const { id } = req.user;
   const [result] = await usersServices.getFollowers(id);
 
-  res.status(200).json({ followers: result?.followers || [] });
+  res.status(200).json(result?.followers || []);
 };
 
 const getCurrentUser = (req, res) => {

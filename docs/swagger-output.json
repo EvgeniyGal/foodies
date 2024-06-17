@@ -938,12 +938,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/categoriesResponse"
+                  "$ref": "#/components/schemas/categoriesRes"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/categoriesResponse"
+                  "$ref": "#/components/schemas/categoriesRes"
                 }
               }
             }
@@ -1233,12 +1233,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipeResponse"
+                  "$ref": "#/components/schemas/recipeRes"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipeResponse"
+                  "$ref": "#/components/schemas/recipeRes"
                 }
               }
             }
@@ -1297,6 +1297,13 @@
           },
           {
             "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1373,12 +1380,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipeResponse"
+                  "$ref": "#/components/schemas/recipeRes"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipeResponse"
+                  "$ref": "#/components/schemas/recipeRes"
                 }
               }
             }
@@ -1450,12 +1457,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipesResponse"
+                  "$ref": "#/components/schemas/recipesRes"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/recipesResponse"
+                  "$ref": "#/components/schemas/recipesRes"
                 }
               }
             }
@@ -1704,44 +1711,39 @@
           "name": "userNewPassBody"
         }
       },
-      "userFollowingsResponse": {
-        "type": "object",
-        "properties": {
-          "followings": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "_id": {
-                  "type": "string",
-                  "example": "6462a6cd4c3d0ddd28897f8e"
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Ivan"
-                },
-                "avatar": {
-                  "type": "string",
-                  "example": "avatar url"
-                },
-                "recipesCount": {
-                  "type": "number",
-                  "example": 20
-                },
-                "recipes": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "title": {
-                        "type": "string",
-                        "example": "title"
-                      },
-                      "thumb": {
-                        "type": "string",
-                        "example": "thumb"
-                      }
-                    }
+      "userFollowingsRes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "6462a6cd4c3d0ddd28897f8e"
+            },
+            "name": {
+              "type": "string",
+              "example": "Ivan"
+            },
+            "avatar": {
+              "type": "string",
+              "example": "avatar url"
+            },
+            "recipesCount": {
+              "type": "number",
+              "example": 20
+            },
+            "recipes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "title"
+                  },
+                  "thumb": {
+                    "type": "string",
+                    "example": "thumb"
                   }
                 }
               }
@@ -1752,44 +1754,39 @@
           "name": "userFollowingsResponse"
         }
       },
-      "userFollowersResponse": {
-        "type": "object",
-        "properties": {
-          "followers": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "_id": {
-                  "type": "string",
-                  "example": "6462a6cd4c3d0ddd28897f8e"
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Ivan"
-                },
-                "avatar": {
-                  "type": "string",
-                  "example": "avatar url"
-                },
-                "recipesCount": {
-                  "type": "number",
-                  "example": 20
-                },
-                "recipes": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "title": {
-                        "type": "string",
-                        "example": "title"
-                      },
-                      "thumb": {
-                        "type": "string",
-                        "example": "thumb"
-                      }
-                    }
+      "userFollowersRes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "example": "6462a6cd4c3d0ddd28897f8e"
+            },
+            "name": {
+              "type": "string",
+              "example": "Ivan"
+            },
+            "avatar": {
+              "type": "string",
+              "example": "avatar url"
+            },
+            "recipesCount": {
+              "type": "number",
+              "example": 20
+            },
+            "recipes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "title"
+                  },
+                  "thumb": {
+                    "type": "string",
+                    "example": "thumb"
                   }
                 }
               }
