@@ -75,16 +75,20 @@ const unfollowUser = async (req, res) => {
 
 const getFollowing = async (req, res) => {
   const { id } = req.user;
-  const [result] = await usersServices.getFollowing(id);
+  const { page = 1, limit = 5 } = req.query;
+  const skip = (page - 1) * limit;
+  const result = await usersServices.getFollowing(id, {skip, limit});
 
-  res.status(200).json(result?.following || []);
+  res.status(200).json(result)
 };
 
 const getFollowers = async (req, res) => {
-  const { id } = req.user;
-  const [result] = await usersServices.getFollowers(id);
+  const { id } = req.params;
+  const { page = 1, limit = 5 } = req.query;
+  const skip = (page - 1) * limit;
+  const result = await usersServices.getFollowers(id, {skip, limit});
 
-  res.status(200).json(result?.followers || []);
+  res.status(200).json(result);
 };
 
 const getCurrentUser = (req, res) => {
@@ -133,15 +137,15 @@ const getFavoriteRecipes = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-  const { id } = req.user;
+  const { id: currentUserId } = req.user;
   const { id: userId } = req.params;
-  const userProfile = await usersServices.getUserInfo(userId);
+  const userProfile = await usersServices.getUserInfo(userId, currentUserId);
 
-  if (id !== userId) {
-    //Other user data
-    delete userProfile.followingQty;
-    delete userProfile.favRecipesQty;
-  }
+  // if (id !== userId) {
+  //   //Other user data
+  //   delete userProfile.followingQty;
+  //   delete userProfile.favRecipesQty;
+  // }
 
   res.status(200).json(userProfile);
 };

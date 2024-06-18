@@ -54,7 +54,7 @@ const authenticate = async token => {
   const user = await findOne(id);
 
   if (!user) {
-    throw HttpError(401, 'User not found');
+    throw HttpError(401);
   }
 
   return user;
@@ -90,36 +90,58 @@ const unfollowUser = async (followerId, followingId) => {
   });
 };
 
-const getFollowUserList = async (_id, listType) => {
+const getFollowUserList = async (_id, listType, { skip = 0, limit = 10 }) => {
   if (!['following', 'followers'].includes(listType)) {
     throw HttpError(500, 'Unknown user list type');
   }
+
+  skip = Number.parseInt(skip);
+  limit = Number.parseInt(limit);
 
   const RECIPES_NUMBER = 10;
 
   const pipeline = [
     { $match: { _id: mongoose.Types.ObjectId.createFromHexString(_id) } },
     {
+      $set: {
+        total: {
+          $size: `$${listType}`,
+        },
+      },
+    },
+    {
+      $set: {
+        userList: {
+          $slice: [`$${listType}`, skip, limit],
+        },
+      },
+    },
+    {
+      $set:
+        {
+          qty: {
+            $size: "$userList"
+          }
+        }
+    },
+    {
       $lookup: {
         from: 'users',
-        localField: listType,
+        localField: 'userList',
         foreignField: '_id',
-        as: listType,
+        as: 'userList',
+      },
+    },
+    {
+      $unwind: {
+        path: '$userList',
+        preserveNullAndEmptyArrays: true,
       },
     },
     {
       $lookup: {
         from: 'recipes',
-        localField: listType,
-        foreignField: 'owner',
-        as: 'recipes',
-      },
-    },
-    { $unwind: `$${listType}` },
-    {
-      $lookup: {
-        from: 'recipes',
-        localField: `${listType}._id`,
+        localField: 'userList._id',
         foreignField: 'owner',
         pipeline: [
           {
@@ -130,41 +152,67 @@ const getFollowUserList = async (_id, listType) => {
             },
           },
         ],
-        as: `${listType}.recipes`,
+        as: 'recipes',
       },
     },
     {
       $addFields: {
-        [`${listType}.recipesCount`]: { $size: `$${listType}.recipes` },
-        [`${listType}.recipes`]: {
-          $slice: [`$${listType}.recipes`, RECIPES_NUMBER],
+        recipesCount: {
+          $size: '$recipes',
+        },
+        recipes: {
+          $slice: ['$recipes', RECIPES_NUMBER],
         },
       },
     },
     {
       $group: {
         _id: '$_id',
-        [`${listType}`]: {
+        total: {
+          $first: '$total',
+        },
+        qty: {
+          $first: '$qty',
+        },
+        data: {
           $push: {
-            _id: `$${listType}._id`,
-            name: `$${listType}.name`,
-            avatar: `$${listType}.avatar`,
-            recipesCount: `$${listType}.recipesCount`,
-            recipes: `$${listType}.recipes`,
+            _id: '$userList._id',
+            name: '$userList.name',
+            avatar: '$userList.avatar',
+            recipesCount: '$recipesCount',
+            recipes: '$recipes',
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        total: 1,
+        qty: 1,
+        data: {
+          $cond: {
+            if: {
+              $gt: ['$qty', 0],
+            },
+            then: '$data',
+            else: [],
           },
         },
       },
     },
   ];
 
-  const userList = await User.aggregate(pipeline);
+  const [result] = await User.aggregate(pipeline);
 
-  return userList;
+  return result || { total: 0, data: [] };
 };
 
-const getFollowing = async _id => await getFollowUserList(_id, 'following');
+const getFollowing = async (_id, options = {}) =>
+  await getFollowUserList(_id, 'following', options);
 
-const getFollowers = async _id => await getFollowUserList(_id, 'followers');
+const getFollowers = async (_id, options = {}) =>
+  await getFollowUserList(_id, 'followers', options);
 
 const likeRecipe = async (_id, recipeId) =>
   await User.findByIdAndUpdate(_id, { $addToSet: { favRecipes: recipeId } });
@@ -231,9 +279,11 @@ const getFavoriteRecipes = async (id, skip = 0, limit = 5) => {
   return result;
 };
 
-const getUserInfo = async id => {
+const getUserInfo = async (id, currentId) => {
+  const userId = mongoose.Types.ObjectId.createFromHexString(id);
+  const currentUserId = mongoose.Types.ObjectId.createFromHexString(currentId);
   const [result] = await User.aggregate([
-    { $match: { _id: mongoose.Types.ObjectId.createFromHexString(id) } },
+    { $match: { _id: userId } },
     {
       $addFields: {
         favRecipes: { $ifNull: ['$favRecipes', []] },
@@ -248,6 +298,21 @@ const getUserInfo = async id => {
       },
     },
     {
+      $lookup: {
+        from: 'users',
+        localField: 'followers',
+        foreignField: '_id',
+        as: 'followersDetails',
+      },
+    },
+    {
+      $addFields: {
+        isFollowing: {
+          $in: [currentUserId, '$followers'],
+        },
+      },
+    },
+    {
       $project: {
         name: 1,
         email: 1,
@@ -256,13 +321,11 @@ const getUserInfo = async id => {
         followingQty: { $size: '$following' },
         favRecipesQty: { $size: '$favRecipes' },
         recipesQty: { $size: '$recipes' },
+        followersDetails: 1,
+        isFollowing: 1,
       },
     },
   ]);
-
-  if (!result) {
-    throw HttpError(401, 'User not found');
-  }
 
   return result;
 };

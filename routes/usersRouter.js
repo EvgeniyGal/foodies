@@ -162,7 +162,7 @@ usersRouter.get(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -171,7 +171,8 @@ usersRouter.get(
     */
 );
 usersRouter.get(
-  '/followers',
+  '/:id/followers',
+  isValidId,
   usersController.getFollowers
   // #swagger.tags = ['Users']
   // #swagger.description = 'Authenticated user route'
@@ -186,7 +187,7 @@ usersRouter.get(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -210,7 +211,7 @@ usersRouter.get(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -235,7 +236,7 @@ usersRouter.get(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -278,7 +279,7 @@ usersRouter.patch(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -303,7 +304,7 @@ usersRouter.patch(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -328,7 +329,7 @@ usersRouter.delete(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -351,7 +352,7 @@ usersRouter.post(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -375,7 +376,7 @@ usersRouter.get(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -400,7 +401,7 @@ usersRouter.patch(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
@@ -425,7 +426,7 @@ usersRouter.delete(
   /* #swagger.responses[401] = {
             description: "Unauthorized",
             schema: { $ref: '#/components/schemas/unauthorizedRes' }
-        }   
+        }
     */
   /* #swagger.responses[404] = {
             description: "Bad request",
